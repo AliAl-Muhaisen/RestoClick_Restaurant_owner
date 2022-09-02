@@ -75,6 +75,18 @@ class CodegenLoader extends AssetLoader{
         }
       }
     }
+  },
+  "forgotPassword": {
+    "dialog": {
+      "title": "استرجاع"
+    },
+    "title": "هل نسيت كلمة المرور ؟",
+    "snackBar": {
+      "error": {
+        "label": "هناك خطأ ما. حاول مرة اخرى"
+      },
+      "success": "تم ارسال البريد الالكتروني بنجاح"
+    }
   }
 };
 static const Map<String,dynamic> en = {
@@ -137,6 +149,18 @@ static const Map<String,dynamic> en = {
           "message": "Information updated successfully"
         }
       }
+    }
+  },
+  "forgotPassword": {
+    "dialog": {
+      "title": "Recovery"
+    },
+    "title": "Forgot Password ?",
+    "snackBar": {
+      "error": {
+        "label": "Something went wrong. Please try again"
+      },
+      "success": "Email has been sent successfully"
     }
   }
 };

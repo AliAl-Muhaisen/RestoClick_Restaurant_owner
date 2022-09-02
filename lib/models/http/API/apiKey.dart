@@ -16,7 +16,7 @@ class Apikey with ChangeNotifier {
 
   Apikey._internal();
 
-  String get _apiKey {
+  String get _databaseApiKey {
     return dotenv.get('API_KEY').toString();
   }
 
@@ -25,11 +25,15 @@ class Apikey with ChangeNotifier {
   }
 
   String get signup {
-    return '${getAPIbyKey('API_Signup')}$_apiKey';
+    return '${getAPIbyKey('API_Signup')}$_databaseApiKey';
   }
 
   String get login {
-    return '${getAPIbyKey('Login_EndPoint')}$_apiKey';
+    return '${getAPIbyKey('Login_EndPoint')}$_databaseApiKey';
+  }
+ String get forgotPassword
+  { 
+    return '${getAPIbyKey('Forgot_Password')}$_databaseApiKey';
   }
 
   Future<String> get userInfo async {

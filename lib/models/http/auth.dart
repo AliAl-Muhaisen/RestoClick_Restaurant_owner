@@ -129,13 +129,24 @@ class Auth with ChangeNotifier {
       );
 
       _autoLogout();
-      notifyListeners();
-      await saveAuthUserDataInLocalStorage();
+      // Map? info;
       Timer(const Duration(seconds: 2), () async {
         Map info = await getUserInfo();
         await saveAuthUserInfoInLocalStorage(info);
-        log('\n\n dta from authenticate function $info');
+
+        log("restaurant info ${info['restaurantInfo']['isActive']}");
+        // if (info['email'] == null) {
+        //   log('\n\n nulllllllllllllllllll\n\n');
+        //   _token = null;
+        //   // throw Error();
+        //   throw HttpException('This is not a restaurant account');
+        // }
       });
+      await saveAuthUserDataInLocalStorage();
+      notifyListeners();
+
+      // await saveAuthUserDataInLocalStorage();
+
     } catch (error) {
       log('Error auth file authenticate function $error');
       throw error;
@@ -187,7 +198,6 @@ class Auth with ChangeNotifier {
   }
 
   void logout() {
-    // log(_token.toString());
     _token = null;
     _expiryDate = null;
     _userId = null;
@@ -217,13 +227,14 @@ class Auth with ChangeNotifier {
           "userName": name,
           "email": email,
           "phoneNumber": phoneNumber,
+          "restaurantInfo": {"isActive": "false", "name": "", "address": ""}
         },
       );
       final response = await http.put(url, body: body);
       // final responseData = json.decode(response.body);
     } catch (error) {
-      log(error.toString());
       log('something went wrong auth file , function userInfo');
+      log(error.toString());
     }
   }
 
@@ -233,14 +244,17 @@ class Auth with ChangeNotifier {
       final url = Uri.parse(api.toString());
       log('url $url');
       http.Response response = await http.get(url);
-      log('Response');
 
       Map responseData = await json.decode(response.body) as Map;
-      log('ResponseData');
-
       log('auth file function getUserInfo responseData ${responseData.toString()}');
       log('auth file function getUserInfo response ${response.toString()}');
+      // if (responseData == null) {
+      //   log('\n\n nulllllllllllllllllll\n\n');
+      //   //  return throw Error();
+      //   return throw HttpException('This is not a restaurant account');
+      // }
       saveAuthUserInfoInLocalStorage(responseData);
+
       return responseData;
     } catch (error) {
       log('auth file function getUserInfo \nError: $error');
@@ -262,12 +276,39 @@ class Auth with ChangeNotifier {
         },
       );
       final response = await http.patch(url, body: body);
-       Map info = await getUserInfo();
-        await saveAuthUserInfoInLocalStorage(info);
-
+      Map info = await getUserInfo();
+      await saveAuthUserInfoInLocalStorage(info);
     } catch (error) {
       log(error.toString());
       log('something went wrong auth file , function updateUserInfo');
     }
+  }
+
+  Future<void> forgotPassword(String email) async {
+    //? Send password reset email
+    email = email.trim();
+    try {
+      // log("forgot password key ${Apikey().forgotPassword.toString()}");
+      final url = Uri.parse(Apikey().forgotPassword.toString());
+      log('url $url');
+      http.Response response = await http.post(
+        url,
+        body: json.encode({
+          "email": email,
+          "requestType": "PASSWORD_RESET",
+        }),
+      );
+    } catch (error) {
+      log('Error-> auth file, function forgotPassword \nError: $error');
+    }
+  }
+
+  static Future<Map> authInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey(Auth.authUserData)) return {};
+    final data = prefs.get(Auth.authUserData).toString();
+    final dataInfo = json.decode(data);
+    // log(" userInfo ${dataInfo['token']}");
+    return dataInfo;
   }
 }

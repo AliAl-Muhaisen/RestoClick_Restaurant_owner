@@ -43,6 +43,7 @@ SizedBox ProfilePic({bool isEdit = false}) {
 class CardSetting extends StatelessWidget {
   Function onPressed;
   final icon;
+  IconData? tailIcon;
   String text;
 
   CardSetting({
@@ -50,6 +51,7 @@ class CardSetting extends StatelessWidget {
     required this.onPressed,
     required this.icon,
     required this.text,
+    this.tailIcon=Icons.arrow_forward_ios
   }) : super(key: key);
 
   @override
@@ -78,7 +80,7 @@ class CardSetting extends StatelessWidget {
             Expanded(
               child: Text(text),
             ),
-            const Icon(Icons.arrow_forward_ios),
+             Icon(tailIcon),
           ],
         ),
       ),

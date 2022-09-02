@@ -2,13 +2,14 @@ import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:restaurant_owner_app/screens/test.dart';
 import '../models/screen.dart';
 import '../themes/stander/buttons.dart';
 import '../themes/stander/text.dart';
 import '../translations/locale_keys.dart';
 import '../widgets/languageDropDown.dart';
-import 'loginPage.dart';
-import 'signupPage.dart';
+import 'auth/loginPage.dart';
+import 'auth/signupPage.dart';
 
 class MainPage extends StatelessWidget {
   // const MainPage({Key? key}) : super(key: key);
@@ -53,8 +54,9 @@ class MainPage extends StatelessWidget {
                 ],
               ),
             ),
-            
-            
+            ButtonloginAndSign('test image', () {
+              Screen().pushNamed(context, Test.routeName);
+            }),
           ],
         ),
       ),

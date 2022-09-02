@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:restaurant_owner_app/screens/auth/confirmInfo.dart';
+import 'package:restaurant_owner_app/screens/test.dart';
+
 import '/models/screen.dart';
 import '/models/http/auth.dart';
 // import '../screens/profile/accountSettingPage.dart';
@@ -34,7 +37,19 @@ class _HomePageState extends State<HomePage> {
             ),
             ElevatedButton(
               onPressed: () {
-              //  Screen().pushNamed(context,AccountSettingPage.routeName);
+                Screen().pushNamed(context, Test.routeName);
+              },
+              child: const Text('test image'),
+            ),
+             ElevatedButton(
+              onPressed: () {
+                Screen().pushNamed(context, ConfirmInfoPage.routeName);
+              },
+              child: const Text('ConfirmInfoPage'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                //  Screen().pushNamed(context,AccountSettingPage.routeName);
                 log('Setting');
               },
               child: const Text("Setting"),
@@ -42,16 +57,16 @@ class _HomePageState extends State<HomePage> {
             ElevatedButton(
               onPressed: () async {
                 final prefs = await SharedPreferences.getInstance();
-                final extractedUserData = await json
-                    .decode(prefs.getString(Auth.authUserInfo).toString()) as Map;
+                final extractedUserData = await json.decode(
+                    prefs.getString(Auth.authUserInfo).toString()) as Map;
                 // final token = await extractedUserData['token'] as String?;
                 // final userId = await extractedUserData['userId'] as String?;
-               final data=await Provider.of<Auth>(context, listen: false).getUserInfo();
-              //  final s=await Provider.of<Auth>(context, listen: false).saveAauthUserInfoInLocalStorage(data);
-               log('Data nigga22222222222222222 $data \n user name: ${data['userName']}');
-               log('Data nigga $extractedUserData \n user name: ');
+                final data = await Provider.of<Auth>(context, listen: false)
+                    .getUserInfo();
+                //  final s=await Provider.of<Auth>(context, listen: false).saveAauthUserInfoInLocalStorage(data);
+                log('Data nigga22222222222222222 $data \n user name: ${data['userName']}');
+                log('Data nigga $extractedUserData \n user name: ');
 
-                
                 // log(extractedUserData.toString());
               },
               child: const Text("Fetch data"),

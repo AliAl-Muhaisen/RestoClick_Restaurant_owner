@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "600016956800",
+    "firebase_url": "https://restoclick-85d53-default-rtdb.firebaseio.com",
+    "project_id": "restoclick-85d53",
+    "storage_bucket": "restoclick-85d53.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:600016956800:android:288cf1628fdf67155aa565",
+        "android_client_info": {
+          "package_name": "com.example.restaurant_owner_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "600016956800-573lafd97pgj63srbjfshrdkrqv00k1o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRj0OA3qh60aPzQ_ba1YQCgJunEjOUIf0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "600016956800-573lafd97pgj63srbjfshrdkrqv00k1o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

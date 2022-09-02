@@ -15,6 +15,10 @@ class InputFormField extends StatefulWidget {
   final String? Function(String) validator;
   final Function(String) onSaved;
   // ignore: use_key_in_widget_constructors
+
+  //?border
+  double focusedBorderRadius;
+  double enabledBorderRadius;
   InputFormField({
     this.keyBoardType,
     this.inputIcon,
@@ -24,6 +28,8 @@ class InputFormField extends StatefulWidget {
     required this.onSaved,
     this.initialValue,
     this.isEnable=true,
+    this.focusedBorderRadius = 25.7,
+    this.enabledBorderRadius = 25.7,
   });
 
   @override
@@ -91,11 +97,11 @@ class _InputFormFieldState extends State<InputFormField> {
           fillColor: Colors.white,
           focusedBorder: UnderlineInputBorder(
             borderSide:const BorderSide(color: Colors.white),
-            borderRadius: BorderRadius.circular(25.7),
+            borderRadius: BorderRadius.circular(widget.focusedBorderRadius),
           ),
           enabledBorder: UnderlineInputBorder(
             borderSide:const BorderSide(color: Colors.white),
-            borderRadius: BorderRadius.circular(25.7),
+            borderRadius: BorderRadius.circular(widget.enabledBorderRadius),
           ),
 
           // errorText:

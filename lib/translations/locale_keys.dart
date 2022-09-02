@@ -45,5 +45,13 @@ abstract class  LocaleKeys {
   static const showHttpDialog_titleAndMessage_success = 'showHttpDialog.titleAndMessage.success';
   static const showHttpDialog_titleAndMessage = 'showHttpDialog.titleAndMessage';
   static const showHttpDialog = 'showHttpDialog';
+  static const forgotPassword_dialog_title = 'forgotPassword.dialog.title';
+  static const forgotPassword_dialog = 'forgotPassword.dialog';
+  static const forgotPassword_title = 'forgotPassword.title';
+  static const forgotPassword_snackBar_error_label = 'forgotPassword.snackBar.error.label';
+  static const forgotPassword_snackBar_error = 'forgotPassword.snackBar.error';
+  static const forgotPassword_snackBar_success = 'forgotPassword.snackBar.success';
+  static const forgotPassword_snackBar = 'forgotPassword.snackBar';
+  static const forgotPassword = 'forgotPassword';
 
 }

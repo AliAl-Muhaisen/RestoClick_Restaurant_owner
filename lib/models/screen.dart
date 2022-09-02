@@ -1,12 +1,17 @@
+
+
+import 'package:restaurant_owner_app/screens/auth/confirmInfo.dart';
+import 'package:restaurant_owner_app/screens/test.dart';
+
 import '/screens/homePage.dart';
 import '/screens/mainPage.dart';
 // import '/screens/profile/accountSettingPage.dart';
 // import '/screens/profile/editAccount.dart';
-import '/screens/signupPage.dart';
+import '../screens/auth/signupPage.dart';
 import '/screens/splashPage.dart';
 import 'package:flutter/material.dart';
 
-import '../screens/loginPage.dart';
+import '../screens/auth/loginPage.dart';
 
 class Screen {
   static final Screen _screen = Screen._internal();
@@ -21,6 +26,8 @@ class Screen {
     SignUpPage.routeName: (context) => SignUpPage(),
     HomePage.routeName: (context) => HomePage(),
     SplashPage.routeName: (context) => SplashPage(),
+    Test.routeName: (context) => const Test(),
+    ConfirmInfoPage.routeName:(context) => const ConfirmInfoPage(),
     // AccountSettingPage.routeName: (context) => AccountSettingPage(),
     // EditAccount.routeName: (context) => EditAccount()
   };

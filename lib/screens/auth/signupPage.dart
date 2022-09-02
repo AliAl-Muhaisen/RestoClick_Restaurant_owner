@@ -4,16 +4,16 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/screen.dart';
-import '../models/user.dart';
-import '../models/verify.dart';
-import '../models/http/auth.dart';
-import '../models/http/http_exception.dart';
-import '../themes/stander/buttons.dart';
-import '../translations/locale_keys.dart';
-import '../widgets/inputFormField.dart';
-import '../widgets/utils/addSpace.dart';
-import '../widgets/utils/showDialog.dart';
+import '../../models/screen.dart';
+import '../../models/user.dart';
+import '../../models/verify.dart';
+import '../../models/http/auth.dart';
+import '../../models/http/http_exception.dart';
+import '../../themes/stander/buttons.dart';
+import '../../translations/locale_keys.dart';
+import '../../widgets/inputFormField.dart';
+import '../../widgets/utils/addSpace.dart';
+import '../../widgets/utils/showDialog.dart';
 
 class SignUpPage extends StatefulWidget {
   static const String routeName = '/SignupPage';
@@ -100,17 +100,17 @@ class _SignUpPageState extends State<SignUpPage> {
       await Provider.of<Auth>(context, listen: false).signup(user);
       Screen().pop(context);
     }
-    // on HttpException catch (error) {
-    //   var errorMessage = 'Authentication failed';
-    //   if (error.toString().contains('EMAIL_EXISTS')) {
-    //     errorMessage = 'This email address is already in use.';
-    //   } else if (error.toString().contains('INVALID_EMAIL')) {
-    //     errorMessage = 'This is not a valid email address';
-    //   } else if (error.toString().contains('WEAK_PASSWORD')) {
-    //     errorMessage = 'This password is too weak.';
-    //   }
-    //   showHttpDialog(errorMessage,context);
-    // }
+    on HttpException catch (error) {
+      var errorMessage = 'Authentication failed';
+      if (error.toString().contains('EMAIL_EXISTS')) {
+        errorMessage = 'This email address is already in use.';
+      } else if (error.toString().contains('INVALID_EMAIL')) {
+        errorMessage = 'This is not a valid email address';
+      } else if (error.toString().contains('WEAK_PASSWORD')) {
+        errorMessage = 'This password is too weak.';
+      }
+      // showHttpDialog(errorMessage,context);
+    }
     catch (error) {
       print('error');
       print(error);

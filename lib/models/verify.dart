@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +11,31 @@ class Verify {
     return _verify;
   }
   Verify._internal();
+   String? isImage(File? file)
+  {
+    if(file == null)
+    {
+      return "Uploaded file is not a valid image";
+    }
+    return null;
+  }
+  String? isAddress(String? address)
+  {
+    if(address!.length <3 || address.isEmpty)
+    {
+      return "invalid address";
+    }
+    return null;
+  }
 
+  String? isRestaurantName(String? restaurantName)
+  {
+    if(restaurantName!.length <3 || restaurantName.isEmpty)
+    {
+      return "invalid name";
+    }
+    return null;
+  }
   String? isEMail(String? email) {
     // to check if the email address valid or not
     email = email!.trim();

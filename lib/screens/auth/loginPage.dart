@@ -1,17 +1,17 @@
-
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
-import '../models/http/auth.dart';
-import '../models/screen.dart';
-import '../models/user.dart';
-import '../models/verify.dart';
-import '../themes/stander/buttons.dart';
-import '../translations/locale_keys.dart';
-import '../widgets/inputFormField.dart';
-import '../widgets/utils/addSpace.dart';
-import '../widgets/utils/showDialog.dart';
+import 'package:restaurant_owner_app/models/http/http_exception.dart';
+import '../../models/http/auth.dart';
+import '../../models/screen.dart';
+import '../../models/user.dart';
+import '../../models/verify.dart';
+import '../../themes/stander/buttons.dart';
+import '../../translations/locale_keys.dart';
+import '../../widgets/inputFormField.dart';
+import '../../widgets/utils/addSpace.dart';
+import '../../widgets/utils/showDialog.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -58,23 +58,31 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
     _formKey.currentState!.save();
-    print('user.email ${user.email}');
-    print('user.password ${user.password}');
+
     setState(() {
       _isLoading = true;
     });
     try {
-      print('try');
-
       await Provider.of<Auth>(context, listen: false)
           .login(user.email, user.password);
       Screen().pop(context);
 
       // showHttpDialog('Account created successfully', context);
+    } on HttpException catch (error) {
+      var errorMessage = 'Authentication failed';
+      if (error.toString().contains('EMAIL_EXISTS')) {
+        errorMessage = 'This email address is already in use.';
+      } else if (error.toString().contains('INVALID_EMAIL')) {
+        errorMessage = 'This is not a valid email address';
+      } else if (error.toString().contains('WEAK_PASSWORD')) {
+        errorMessage = 'This password is too weak.';
+      }
+      showHttpDialog('Error', errorMessage, 'Close', context);
+      // showHttpDialog(errorMessage,context);
     } catch (error) {
       print('error');
       print(error);
-       showHttpDialog(
+      showHttpDialog(
         LocaleKeys.showHttpDialog_titleAndMessage_error_clientError_title.tr(),
         LocaleKeys.showHttpDialog_titleAndMessage_error_clientError_message
             .tr(),
@@ -101,9 +109,10 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               email!,
               password!,
+              const ForgotPasswordButton(),
               AddVerticalSpace(15),
               if (_isLoading)
-                CircularProgressIndicator()
+                const CircularProgressIndicator()
               else
                 SizedBox(
                   width: MediaQuery.of(context).size.width - 30,
