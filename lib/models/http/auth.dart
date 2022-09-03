@@ -227,7 +227,11 @@ class Auth with ChangeNotifier {
           "userName": name,
           "email": email,
           "phoneNumber": phoneNumber,
-          "restaurantInfo": {"isActive": "false", "name": "", "address": ""}
+          "restaurantInfo": {
+            "isActive": "false",
+            "name": "",
+            "address": "",
+          }
         },
       );
       final response = await http.put(url, body: body);

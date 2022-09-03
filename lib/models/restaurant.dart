@@ -1,4 +1,9 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
+import 'package:http/http.dart' as http;
+
+import 'http/API/apiKey.dart';
 
 class Restaurant {
   String? _restaurantName;
@@ -29,5 +34,26 @@ class Restaurant {
 
   void setCommercialRegistry(File commercialRegistry) {
     _commercialRegistry = commercialRegistry;
+  }
+
+  Future<void> updateRestaurantInfo(String restaurantName, String address) async {
+    try {
+    String api = await Apikey().userInfo;
+    final url = Uri.parse(api.toString());
+    var body = json.encode(
+      {
+        "restaurantInfo": {
+          // "isActive": "true",
+          "name": restaurantName,
+          "address": address,
+        }
+      },
+    );
+    final response = await http.patch(url, body: body);
+    }
+    catch (error) {
+      log('something went wrong Restaurant file , function updateRestaurantInfo');
+      log(error.toString());
+    }
   }
 }

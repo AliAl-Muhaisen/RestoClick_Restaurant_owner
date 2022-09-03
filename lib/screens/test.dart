@@ -31,7 +31,7 @@ class _TestState extends State<Test> {
 
   Future<void> imageUpload() async {
     // FirebaseStorage.uploadImage(file);
-    FirebaseStorage().uploadImage(file!);
+    FirebaseStorage().uploadImage(file!,"test");
     // if (file == null) return;
     //  firebase_storage.FirebaseStorage storage=firebase_storage.FirebaseStorage.instance;
     // String imageBase = base64Encode(file!.readAsBytesSync());

@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:restaurant_owner_app/models/restaurant.dart';
 import 'package:restaurant_owner_app/screens/auth/confirmInfo.dart';
+import 'package:restaurant_owner_app/screens/restaurant/Menu.dart';
 import 'package:restaurant_owner_app/screens/test.dart';
 
 import '/models/screen.dart';
@@ -35,13 +37,27 @@ class _HomePageState extends State<HomePage> {
               },
               child: const Text("Logout"),
             ),
+
+            ElevatedButton(
+              onPressed: () async {
+                Screen().pushNamed(context, Menu.routeName);
+              },
+              child: const Text("Menu"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+               Restaurant restaurant=Restaurant();
+              //  restaurant.updateRestaurantInfo();
+              },
+              child: const Text("update data"),
+            ),
             ElevatedButton(
               onPressed: () {
                 Screen().pushNamed(context, Test.routeName);
               },
               child: const Text('test image'),
             ),
-             ElevatedButton(
+            ElevatedButton(
               onPressed: () {
                 Screen().pushNamed(context, ConfirmInfoPage.routeName);
               },
@@ -49,7 +65,6 @@ class _HomePageState extends State<HomePage> {
             ),
             ElevatedButton(
               onPressed: () {
-                //  Screen().pushNamed(context,AccountSettingPage.routeName);
                 log('Setting');
               },
               child: const Text("Setting"),
@@ -59,8 +74,7 @@ class _HomePageState extends State<HomePage> {
                 final prefs = await SharedPreferences.getInstance();
                 final extractedUserData = await json.decode(
                     prefs.getString(Auth.authUserInfo).toString()) as Map;
-                // final token = await extractedUserData['token'] as String?;
-                // final userId = await extractedUserData['userId'] as String?;
+
                 final data = await Provider.of<Auth>(context, listen: false)
                     .getUserInfo();
                 //  final s=await Provider.of<Auth>(context, listen: false).saveAauthUserInfoInLocalStorage(data);

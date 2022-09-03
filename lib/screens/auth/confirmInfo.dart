@@ -114,10 +114,17 @@ class _ConfirmInfoPageState extends State<ConfirmInfoPage> {
     setState(() {
       _isLoading = true;
     });
-    try{
-      FirebaseStorage().uploadImage(commercialRegistry!);
-      FirebaseStorage().uploadImage(workLicense!);
-    }catch (error) {
+    try {
+      FirebaseStorage().uploadImage(commercialRegistry!, "commercialRegistry");
+      FirebaseStorage().uploadImage(workLicense!, "workLicense");
+
+      restaurant.updateRestaurantInfo(
+        restaurant.restaurantName!,
+        restaurant.address!,
+      );
+
+      log('All done <*_->');
+    } catch (error) {
       log('something went wrong ConfirmInfoPage file , submit function \nError:');
       log(error.toString());
     }

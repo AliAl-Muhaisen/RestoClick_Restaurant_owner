@@ -1,6 +1,7 @@
 
 
 import 'package:restaurant_owner_app/screens/auth/confirmInfo.dart';
+import 'package:restaurant_owner_app/screens/restaurant/Menu.dart';
 import 'package:restaurant_owner_app/screens/test.dart';
 
 import '/screens/homePage.dart';
@@ -28,6 +29,7 @@ class Screen {
     SplashPage.routeName: (context) => SplashPage(),
     Test.routeName: (context) => const Test(),
     ConfirmInfoPage.routeName:(context) => const ConfirmInfoPage(),
+    Menu.routeName:(context) => const Menu(),
     // AccountSettingPage.routeName: (context) => AccountSettingPage(),
     // EditAccount.routeName: (context) => EditAccount()
   };

@@ -14,7 +14,7 @@ class FirebaseStorage {
 
   FirebaseStorage._internal();
 
-  Future<void> uploadImage(File file) async {
+  Future<void> uploadImage(File file,String fileName) async {
     log('------------------- *-* -_- ^-^ ^_^ <-_-> ');
 
     file = createFile(file);
@@ -29,7 +29,7 @@ class FirebaseStorage {
        throw Error();
       }
       await storage
-          .ref('${FileDirectory.restaurantRegistration.toShortString()}/${userData['userId']}/${file.path.split('/').last}')
+          .ref('${FileDirectory.restaurantRegistration.toShortString()}/${userData['userId']}/$fileName')
           .putFile(file);
      
     } catch (error) {
