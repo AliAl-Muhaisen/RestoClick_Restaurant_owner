@@ -3,7 +3,6 @@ class RestaurantMenu {
 }
 
 class Meal {
-  final String id;
   final String title;
   final String imageUrl;
   final List<String> ingredients;
@@ -14,7 +13,6 @@ class Meal {
   final bool isVegetarian;
 
   const Meal({
-    required this.id,
     required this.title,
     required this.imageUrl,
     required this.ingredients,

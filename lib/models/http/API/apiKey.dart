@@ -3,9 +3,8 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '/models/localStorage.dart';
 
-import '../auth.dart';
 
 class Apikey with ChangeNotifier {
   static final Apikey _apikey = Apikey._internal();
@@ -37,15 +36,16 @@ class Apikey with ChangeNotifier {
   }
 
   Future<String> get userInfo async {
-    final prefs = await SharedPreferences.getInstance();
-    final extractedUserData =
-        await json.decode(prefs.getString(Auth.authUserData).toString()) as Map;
-    final token = await extractedUserData['token'] as String?;
-    final userId = await extractedUserData['userId'] as String?;
+    // final prefs = await SharedPreferences.getInstance();
+    // final extractedUserData =
+    //     await json.decode(prefs.getString(Auth.authUserData).toString()) as Map;
+    // final token = await extractedUserData['token'] as String?;
+    // final userId = await extractedUserData['userId'] as String?;
+    final token=await LocalStorage().token;
+    final userId=await LocalStorage().userId;
     String url = getAPIbyKey('DataBase').toString() +
         "restaurantUsers/$userId.json?auth=" +
         token.toString();
-    // log('\n\n\n get userInfo333 $url\n\n\n');
     return url.toString();
   }
 }

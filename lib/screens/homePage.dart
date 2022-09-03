@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:restaurant_owner_app/models/localStorage.dart';
 import 'package:restaurant_owner_app/models/restaurant.dart';
 import 'package:restaurant_owner_app/screens/auth/confirmInfo.dart';
 import 'package:restaurant_owner_app/screens/restaurant/Menu.dart';
@@ -11,7 +12,7 @@ import '/models/http/auth.dart';
 // import '../screens/profile/accountSettingPage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
@@ -37,7 +38,6 @@ class _HomePageState extends State<HomePage> {
               },
               child: const Text("Logout"),
             ),
-
             ElevatedButton(
               onPressed: () async {
                 Screen().pushNamed(context, Menu.routeName);
@@ -46,8 +46,8 @@ class _HomePageState extends State<HomePage> {
             ),
             ElevatedButton(
               onPressed: () async {
-               Restaurant restaurant=Restaurant();
-              //  restaurant.updateRestaurantInfo();
+                Restaurant restaurant = Restaurant();
+                //  restaurant.updateRestaurantInfo();
               },
               child: const Text("update data"),
             ),
@@ -71,10 +71,10 @@ class _HomePageState extends State<HomePage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final prefs = await SharedPreferences.getInstance();
-                final extractedUserData = await json.decode(
-                    prefs.getString(Auth.authUserInfo).toString()) as Map;
-
+                // final prefs = await SharedPreferences.getInstance();
+                // final extractedUserData = await json.decode(
+                //     prefs.getString(Auth.authUserInfo).toString()) as Map;
+                final extractedUserData = LocalStorage().userInfo;
                 final data = await Provider.of<Auth>(context, listen: false)
                     .getUserInfo();
                 //  final s=await Provider.of<Auth>(context, listen: false).saveAauthUserInfoInLocalStorage(data);

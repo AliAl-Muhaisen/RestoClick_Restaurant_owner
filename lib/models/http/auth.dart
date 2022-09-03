@@ -3,21 +3,19 @@ import 'dart:convert';
 import 'dart:developer';
 //
 import 'package:flutter/material.dart';
+import 'package:restaurant_owner_app/models/localStorage.dart';
 
 import './API/apiKey.dart';
 import './http_exception.dart';
 import '../user.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth with ChangeNotifier {
   // ignore: slash_for_doc_comments
   /**
   *? Functions
-  *!-------
-  ** saveAuthUserDataInLocalStorage
-  ** saveAuthUserInfoInLocalStorage
-  ** removeUserDataInLocalStorage
+
   *!-------
   ** get token
   * * get userId
@@ -43,43 +41,6 @@ class Auth with ChangeNotifier {
   static const String authUserInfo = "authUserInfo";
   bool get isAuth {
     return token != null;
-  }
-
-  Future<void> saveAuthUserDataInLocalStorage() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final userData = json.encode(
-      {
-        'token': _token,
-        'userId': _userId,
-        'expiryDate': _expiryDate!.toIso8601String(),
-      },
-    );
-    await prefs.setString(authUserData, userData);
-
-    // log('authUserData saved with value : ${prefs.get(authUserData).toString()}');
-  }
-
-  Future<void> saveAuthUserInfoInLocalStorage(Map info) async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final userInfo = json.encode(
-      {
-        'userName': info['userName'],
-        'phoneNumber': info['phoneNumber'],
-        "email": info['email'],
-      },
-    );
-    await prefs.setString(authUserInfo, userInfo);
-
-    log('authUserInfo saved with value : ${prefs.get(authUserInfo).toString()}');
-  }
-
-  Future<void> removeLocalStorage() async {
-    final prefs = await SharedPreferences.getInstance();
-    // prefs.remove(authUserData);
-    prefs.clear();
-    log('authUserData removed  : ${prefs.get(authUserData).toString()}');
   }
 
   String? get token {
@@ -129,10 +90,10 @@ class Auth with ChangeNotifier {
       );
 
       _autoLogout();
-      // Map? info;
       Timer(const Duration(seconds: 2), () async {
         Map info = await getUserInfo();
-        await saveAuthUserInfoInLocalStorage(info);
+
+        await LocalStorage().saveAuthUserInfoInLocalStorage(info);
 
         log("restaurant info ${info['restaurantInfo']['isActive']}");
         // if (info['email'] == null) {
@@ -142,7 +103,16 @@ class Auth with ChangeNotifier {
         //   throw HttpException('This is not a restaurant account');
         // }
       });
-      await saveAuthUserDataInLocalStorage();
+      // await saveAuthUserDataInLocalStorage(
+      //   token,
+      //   userId,
+      //   _expiryDate,
+      // );
+      await LocalStorage().saveAuthUserDataInLocalStorage(
+        token!,
+        userId!,
+        _expiryDate!,
+      );
       notifyListeners();
 
       // await saveAuthUserDataInLocalStorage();
@@ -171,25 +141,24 @@ class Auth with ChangeNotifier {
 
     //? Attempt to auto-login
 
-    final prefs = await SharedPreferences.getInstance();
-    if (!prefs.containsKey(authUserData)) {
-      // ! Auto login failed
-      log('Auto login failed');
-      return false;
-    }
+    // final prefs = await SharedPreferences.getInstance();
+    // if (!prefs.containsKey(authUserData)) {
+    //   // ! Auto login failed
+    //   log('Auto login failed');
+    //   return false;
+    // }
 
-    final extractedUserData =
-        json.decode(prefs.getString(authUserData).toString()) as Map;
+    // final extractedUserData =
+    // json.decode(prefs.getString(authUserData).toString()) as Map;
     // log('extractedUserData ${extractedUserData.toString()}');
-    final expiryDate =
-        DateTime.parse(extractedUserData['expiryDate'].toString());
+    final expiryDate = DateTime.parse(LocalStorage().expiryDate.toString());
     if (expiryDate.isBefore(DateTime.now())) {
       // ! Auto login failed
       log('Auto login failed');
       return false;
     }
-    _token = extractedUserData['token'] as String?;
-    _userId = extractedUserData['userId'] as String?;
+    _token = LocalStorage().token.toString();
+    _userId = LocalStorage().userId.toString();
     _expiryDate = expiryDate;
     notifyListeners();
     _autoLogout();
@@ -202,7 +171,7 @@ class Auth with ChangeNotifier {
     _expiryDate = null;
     _userId = null;
     notifyListeners();
-    removeLocalStorage();
+    LocalStorage().removeLocalStorage();
   }
 
   void _autoLogout() {
@@ -257,7 +226,7 @@ class Auth with ChangeNotifier {
       //   //  return throw Error();
       //   return throw HttpException('This is not a restaurant account');
       // }
-      saveAuthUserInfoInLocalStorage(responseData);
+      await LocalStorage().saveAuthUserInfoInLocalStorage(responseData);
 
       return responseData;
     } catch (error) {
@@ -281,7 +250,7 @@ class Auth with ChangeNotifier {
       );
       final response = await http.patch(url, body: body);
       Map info = await getUserInfo();
-      await saveAuthUserInfoInLocalStorage(info);
+      await LocalStorage().saveAuthUserInfoInLocalStorage(info);
     } catch (error) {
       log(error.toString());
       log('something went wrong auth file , function updateUserInfo');
@@ -308,11 +277,12 @@ class Auth with ChangeNotifier {
   }
 
   static Future<Map> authInfo() async {
-    final prefs = await SharedPreferences.getInstance();
-    if (!prefs.containsKey(Auth.authUserData)) return {};
-    final data = prefs.get(Auth.authUserData).toString();
-    final dataInfo = json.decode(data);
+    // final prefs = await SharedPreferences.getInstance();
+    // if (!prefs.containsKey(Auth.authUserData)) return {};
+    // final data = prefs.get(Auth.authUserData).toString();
+    // final dataInfo = json.decode(data);
     // log(" userInfo ${dataInfo['token']}");
+    final dataInfo = LocalStorage().userInfo;
     return dataInfo;
   }
 }
