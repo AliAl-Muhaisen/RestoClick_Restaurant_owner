@@ -3,13 +3,12 @@ import 'dart:convert';
 import 'dart:developer';
 //
 import 'package:flutter/material.dart';
-import 'package:restaurant_owner_app/models/localStorage.dart';
+import '../localStorage.dart';
 
 import './API/apiKey.dart';
 import './http_exception.dart';
 import '../user.dart';
 import 'package:http/http.dart' as http;
-// import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth with ChangeNotifier {
   // ignore: slash_for_doc_comments

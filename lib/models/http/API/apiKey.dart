@@ -48,4 +48,13 @@ class Apikey with ChangeNotifier {
         token.toString();
     return url.toString();
   }
+  
+  Future<String> get menu async {
+    final token=await LocalStorage().token;
+    final userId=await LocalStorage().userId;
+    String url = getAPIbyKey('DataBase').toString() +
+        "restaurantMenu/$userId.json?auth=" +
+        token.toString();
+    return url.toString();
+  }
 }

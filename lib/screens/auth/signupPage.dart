@@ -86,11 +86,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
     _formKey.currentState!.save();
 
-    print('user.email ${user.email}');
-    print('user.name ${user.name}');
-    print('user.password ${user.password}');
-    print('user.phoneNumber ${user.phoneNumber}');
-    print('--------------------');
+  
     setState(() {
       _isLoading = true;
     });

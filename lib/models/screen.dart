@@ -29,7 +29,7 @@ class Screen {
     SplashPage.routeName: (context) => SplashPage(),
     Test.routeName: (context) => const Test(),
     ConfirmInfoPage.routeName:(context) => const ConfirmInfoPage(),
-    Menu.routeName:(context) => const Menu(),
+    Menu.routeName:(context) =>  Menu(),
     // AccountSettingPage.routeName: (context) => AccountSettingPage(),
     // EditAccount.routeName: (context) => EditAccount()
   };

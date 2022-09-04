@@ -133,7 +133,7 @@ class _ConfirmInfoPageState extends State<ConfirmInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("title")),
+      appBar: AppBar(title: const Text("Confirm Info")),
       body: Form(
         key: _formKey,
         child: Column(

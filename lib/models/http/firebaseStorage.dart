@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:restaurant_owner_app/models/http/auth.dart';
+import 'package:restaurant_owner_app/models/localStorage.dart';
 import 'package:restaurant_owner_app/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,7 +15,26 @@ class FirebaseStorage {
 
   FirebaseStorage._internal();
 
-  Future<void> uploadImage(File file,String fileName) async {
+  Future<void> uploadImage(File file, String fileName) async {
+    String userId = await LocalStorage().userId;
+    String directory =
+        "${FileDirectory.restaurantRegistration.toShortString()}/$userId";
+    if (userId == null) {
+      throw Error();
+    }
+    await _uploadImage(file, directory, fileName);
+  }
+Future<void> uploadImageMenuMeal(File file, String fileName) async {
+    String userId = await LocalStorage().userId;
+    String directory =
+        "${FileDirectory.restaurantMenu.toShortString()}/$userId";
+    if (userId == null) {
+      throw Error();
+    }
+    await _uploadImage(file, directory, fileName);
+  }
+  Future<void> _uploadImage(
+      File file, String directory, String fileName) async {
     log('------------------- *-* -_- ^-^ ^_^ <-_-> ');
 
     file = createFile(file);
@@ -23,15 +43,7 @@ class FirebaseStorage {
         firebase_storage.FirebaseStorage.instance;
     String imageName = file.path.split('/').last;
     try {
-       Map userData =await Auth.authInfo();
-
-      if (userData == {}) {
-       throw Error();
-      }
-      await storage
-          .ref('${FileDirectory.restaurantRegistration.toShortString()}/${userData['userId']}/$fileName')
-          .putFile(file);
-     
+      await storage.ref('$directory/$fileName').putFile(file);
     } catch (error) {
       log('something went wrong FirebaseStorage file , uploadImage function \nError:');
       log(error.toString());
@@ -46,6 +58,7 @@ class FirebaseStorage {
 enum FileDirectory {
   restaurantRegistration,
   userProfileImage,
+  restaurantMenu,
 }
 
 extension ParseToString on FileDirectory {
