@@ -54,9 +54,7 @@ class MainPage extends StatelessWidget {
                 ],
               ),
             ),
-            ButtonloginAndSign('test image', () {
-              Screen().pushNamed(context, Test.routeName);
-            }),
+            
           ],
         ),
       ),

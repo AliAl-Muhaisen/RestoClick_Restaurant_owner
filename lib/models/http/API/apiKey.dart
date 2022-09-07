@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '/models/localStorage.dart';
 
-
 class Apikey with ChangeNotifier {
   static final Apikey _apikey = Apikey._internal();
 
@@ -30,8 +29,8 @@ class Apikey with ChangeNotifier {
   String get login {
     return '${getAPIbyKey('Login_EndPoint')}$_databaseApiKey';
   }
- String get forgotPassword
-  { 
+
+  String get forgotPassword {
     return '${getAPIbyKey('Forgot_Password')}$_databaseApiKey';
   }
 
@@ -41,19 +40,28 @@ class Apikey with ChangeNotifier {
     //     await json.decode(prefs.getString(Auth.authUserData).toString()) as Map;
     // final token = await extractedUserData['token'] as String?;
     // final userId = await extractedUserData['userId'] as String?;
-    final token=await LocalStorage().token;
-    final userId=await LocalStorage().userId;
+    final token = await LocalStorage().token;
+    final userId = await LocalStorage().userId;
     String url = getAPIbyKey('DataBase').toString() +
         "restaurantUsers/$userId.json?auth=" +
         token.toString();
     return url.toString();
   }
-  
+
   Future<String> get menu async {
-    final token=await LocalStorage().token;
-    final userId=await LocalStorage().userId;
+    final token = await LocalStorage().token;
+    final userId = await LocalStorage().userId;
     String url = getAPIbyKey('DataBase').toString() +
         "restaurantMenu/$userId.json?auth=" +
+        token.toString();
+    return url.toString();
+  }
+
+  Future<String> updateAndDeleteMenuMeal(String mealId) async {
+    final token = await LocalStorage().token;
+    final userId = await LocalStorage().userId;
+    String url = getAPIbyKey('DataBase').toString() +
+        "restaurantMenu/$userId/$mealId.json?auth=" +
         token.toString();
     return url.toString();
   }

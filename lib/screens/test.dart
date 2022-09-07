@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:restaurant_owner_app/models/restaurant.dart';
 import '../models/http/firebaseStorage.dart';
+
 class Test extends StatefulWidget {
   static const routeName = '/test';
   const Test({Key? key}) : super(key: key);
@@ -15,9 +16,8 @@ class Test extends StatefulWidget {
 }
 
 class _TestState extends State<Test> {
-  Restaurant restaurant=Restaurant();
+  Restaurant restaurant = Restaurant();
 
-  
   File? file;
   String? filePath;
   Future<void> imagePicker() async {
@@ -30,19 +30,7 @@ class _TestState extends State<Test> {
   }
 
   Future<void> imageUpload() async {
-    // FirebaseStorage.uploadImage(file);
-    FirebaseStorage().uploadImage(file!,"test");
-    // if (file == null) return;
-    //  firebase_storage.FirebaseStorage storage=firebase_storage.FirebaseStorage.instance;
-    // String imageBase = base64Encode(file!.readAsBytesSync());
-    // log('image base = ${imageBase.toString()}');
-    // String imageName = file!.path.split('/').last;
-    // try {
-    //   await storage.ref('testF/$imageName').putFile(file!);
-     
-    // } catch (error) {
-    //   log(error.toString());
-    // }
+    FirebaseStorage().uploadImage(file!, "test");
   }
 
   @override

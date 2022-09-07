@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class InputFormField extends StatefulWidget {
   // const InputFormField({Key? key}) : super(key: key);
@@ -38,9 +37,7 @@ class InputFormField extends StatefulWidget {
 
 class _InputFormFieldState extends State<InputFormField> {
   var changeIconColor = null;
-  // final inputController = Numbe();
 
-  // _InputFormFieldState(this.keyBoardType);
   @override
   void initState() {
     super.initState();
@@ -52,8 +49,14 @@ class _InputFormFieldState extends State<InputFormField> {
   }
 
   @override
+  void dispose() {
+    widget.inputController!.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // print(widget.keyBoardType);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -121,7 +124,6 @@ class _InputFormFieldState extends State<InputFormField> {
                 )
               : null,
         ),
-        // validator: (String? value) =>stateOfIsEmail(value),
         keyboardType: widget.keyBoardType,
       ),
     );

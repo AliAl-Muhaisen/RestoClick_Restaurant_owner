@@ -1,9 +1,11 @@
 
 
-import 'package:restaurant_owner_app/screens/auth/confirmInfo.dart';
-import 'package:restaurant_owner_app/screens/restaurant/Menu.dart';
+import '../screens/auth/confirmInfo.dart';
+import '../screens/restaurant/menuPage.dart';
+import '../screens/restaurant/addMealPage.dart';
 import 'package:restaurant_owner_app/screens/test.dart';
 
+import '../widgets/utils/floatingNavbar.dart';
 import '/screens/homePage.dart';
 import '/screens/mainPage.dart';
 // import '/screens/profile/accountSettingPage.dart';
@@ -23,20 +25,23 @@ class Screen {
 
   Map<String, Widget Function(BuildContext)> routes = {
     MainPage.routeName: (context) => MainPage(),
-    LoginPage.routeName: (context) => LoginPage(),
-    SignUpPage.routeName: (context) => SignUpPage(),
-    HomePage.routeName: (context) => HomePage(),
+    LoginPage.routeName: (context) =>const LoginPage(),
+    SignUpPage.routeName: (context) =>const SignUpPage(),
+    HomePage.routeName: (context) =>const HomePage(),
     SplashPage.routeName: (context) => SplashPage(),
     Test.routeName: (context) => const Test(),
     ConfirmInfoPage.routeName:(context) => const ConfirmInfoPage(),
-    Menu.routeName:(context) =>  Menu(),
+    MealPage.routeName:(context) =>const  MealPage(),
+    MenuPage.routeName:(context)=>MenuPage(),
+    FloatingNavbar.routeName:(context)=>const FloatingNavbar(),
+    
     // AccountSettingPage.routeName: (context) => AccountSettingPage(),
     // EditAccount.routeName: (context) => EditAccount()
   };
 
-  void pushNamed(BuildContext context, page) {
+  void pushNamed(BuildContext context, pageName) {
     print('push with name');
-    Navigator.of(context).pushNamed(page);
+    Navigator.of(context).pushNamed(pageName);
   }
 
   void pushReplacementNamed(BuildContext context, page) {

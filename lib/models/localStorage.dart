@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,8 +31,7 @@ class LocalStorage {
       },
     );
     await prefs.setString(VarName.authData.toShortString(), userData);
-
-    log('authUserData saved with value : ${prefs.get(VarName.authData.toShortString()).toString()}');
+    // log('authUserData saved with value : ${prefs.get(VarName.authData.toShortString()).toString()}');
   }
 
   Future<void> saveAuthUserInfoInLocalStorage(Map info) async {
@@ -43,11 +43,12 @@ class LocalStorage {
         'userName': info['userName'],
         'phoneNumber': info['phoneNumber'],
         "email": info['email'],
+        "isCompleteInfo": info['isCompleteInfo'],
       },
     );
     await prefs.setString(VarName.userInfo.toShortString(), userInfo);
 
-    log('authUserInfo saved with value : ${prefs.get(VarName.userInfo.toShortString()).toString()}');
+    // log('authUserInfo saved with value : ${prefs.get(VarName.userInfo.toShortString()).toString()}');
   }
 
   Future<void> removeLocalStorage() async {
@@ -56,20 +57,29 @@ class LocalStorage {
     final prefs = await SharedPreferences.getInstance();
     // prefs.remove(authUserData);
     prefs.clear();
-    log('authUserData removed  : ${prefs.get(VarName.authData.toShortString()).toString()}');
   }
 
-  Future<Map> get authData async {
+  
+
+  Future<Map?> get authData async {
     final prefs = await SharedPreferences.getInstance();
-    final extractedUserData = await json.decode(
-        prefs.getString(VarName.authData.toShortString()).toString()) as Map;
-    log(extractedUserData.toString());
-    return extractedUserData;
+    try {
+      if (prefs.containsKey(VarName.authData.toShortString())) {
+        final extractedUserData = await json.decode(
+                prefs.getString(VarName.authData.toShortString()).toString())
+            as Map;
+        // log(extractedUserData.toString());
+        return extractedUserData;
+      }
+    } catch (error) {
+      log('something went wrong LocalStorage authData function \n Error \n$error');
+    }
+    return null;
   }
 
-  Future<String> _getAuthData(String valueName) async {
+  Future<String?> _getAuthData(String valueName) async {
     final extractedUserData = await authData;
-    final value = await extractedUserData[valueName];
+    final value = await extractedUserData![valueName];
     return value.toString();
   }
 
@@ -118,6 +128,22 @@ class LocalStorage {
     return token.toString();
   }
 
+  Future<bool?> get isCompleteInfo async {
+    //? get isCompleteInfo from local storage
+
+    log('get isCompleteInfo value');
+    final isComplete =
+        await _getUserInfo(VarName.isCompleteInfo.toShortString());
+
+    if (isComplete.toString() != null && isComplete.toString() == 'false') {
+      return false;
+    } else if (isComplete.toString() != null &&
+        isComplete.toString() == 'true') {
+      return true;
+    }
+    return null;
+  }
+
   Future<String> get userId async {
     //? get userId from local storage
     log('get userId');
@@ -132,9 +158,10 @@ class LocalStorage {
 
   Future<String> get expiryDate async {
     //? get expiryDate from local storage
-    log('get expiryDate');
 
     final expiryDate = await _getAuthData(VarName.expiryDate.toShortString());
+    log('get expiryDate $expiryDate');
+
     return expiryDate.toString();
   }
 }
@@ -148,6 +175,7 @@ enum VarName {
   phoneNumber,
   authData,
   userInfo,
+  isCompleteInfo,
 }
 
 extension ParseToString on VarName {

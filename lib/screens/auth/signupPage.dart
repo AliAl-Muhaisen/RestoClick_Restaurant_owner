@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -7,11 +8,12 @@ import 'package:provider/provider.dart';
 import '../../models/screen.dart';
 import '../../models/user.dart';
 import '../../models/verify.dart';
-import '../../models/http/auth.dart';
+import '../../models/provider/auth.dart';
 import '../../models/http/http_exception.dart';
 import '../../themes/stander/buttons.dart';
 import '../../translations/locale_keys.dart';
 import '../../widgets/inputFormField.dart';
+import '../../widgets/loadingSpin.dart';
 import '../../widgets/utils/addSpace.dart';
 import '../../widgets/utils/showDialog.dart';
 
@@ -26,7 +28,6 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
-  final _passwordController = TextEditingController();
 
   User user = User();
   InputFormField? email;
@@ -74,29 +75,30 @@ class _SignUpPageState extends State<SignUpPage> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   Future<void> _submit() async {
-    print('submitted form');
-    print('--------------------');
+    log('submitted form');
 
     if (!_formKey.currentState!.validate()) {
-      print('invalid inputs');
-      // Invalid!
+      log('invalid inputs');
+      //! Invalid!
       return;
     }
 
     _formKey.currentState!.save();
 
-  
     setState(() {
       _isLoading = true;
     });
     try {
-      print('try');
 
       await Provider.of<Auth>(context, listen: false).signup(user);
       Screen().pop(context);
-    }
-    on HttpException catch (error) {
+    } on HttpException catch (error) {
       var errorMessage = 'Authentication failed';
       if (error.toString().contains('EMAIL_EXISTS')) {
         errorMessage = 'This email address is already in use.';
@@ -106,10 +108,9 @@ class _SignUpPageState extends State<SignUpPage> {
         errorMessage = 'This password is too weak.';
       }
       // showHttpDialog(errorMessage,context);
-    }
-    catch (error) {
-      print('error');
-      print(error);
+    } catch (error) {
+      log('signup error');
+      log(error.toString());
       showHttpDialog(
         LocaleKeys.showHttpDialog_titleAndMessage_error_clientError_title.tr(),
         LocaleKeys.showHttpDialog_titleAndMessage_error_clientError_message
@@ -126,7 +127,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    // print('email.inputController.value.text');
 
     return Scaffold(
       appBar: AppBar(),
@@ -143,7 +143,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 password!,
                 AddVerticalSpace(15),
                 if (_isLoading)
-                  CircularProgressIndicator()
+                   spinKitLoading()
                 else
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 30,

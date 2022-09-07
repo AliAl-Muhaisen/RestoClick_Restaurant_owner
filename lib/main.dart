@@ -4,13 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'models/provider/restaurant/restaurantMenu.dart';
 
-import 'models/http/auth.dart';
+
+import 'models/provider/auth.dart';
+import 'models/provider/restaurant/meal.dart';
 import 'models/screen.dart';
-import 'screens/homePage.dart';
 import 'screens/mainPage.dart';
 import 'screens/splashPage.dart';
+import 'themes/stander/colors.dart';
 import 'translations/codegen_loader.g.dart';
+import 'widgets/utils/floatingNavbar.dart';
 
 Future<void> main() async {
   await dotenv.load(
@@ -41,13 +45,12 @@ Future<void> main() async {
         Locale('ar'),
       ],
       fallbackLocale: const Locale('en'),
-      assetLoader: CodegenLoader(),
+      assetLoader:const CodegenLoader(),
       child: MyApp(),
     ),
   );
   // runApp(const MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
@@ -58,6 +61,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => Auth()),
+        ChangeNotifierProvider(create: (context) => RestaurantMenu()),
+        ChangeNotifierProvider(create: (context) => Meal()),
       ],
       child: Consumer<Auth>(
         builder: (context, auth, _) => MaterialApp(
@@ -65,7 +70,7 @@ class MyApp extends StatelessWidget {
           title: 'Flutter Demo',
           theme: ThemeData(
             primarySwatch: Colors.blue,
-            scaffoldBackgroundColor: Color.fromARGB(255, 216, 210, 210),
+            scaffoldBackgroundColor:backgroundColor,//Color.fromARGB(255, 243, 235, 235),
           ),
 
           localizationsDelegates: context.localizationDelegates,
@@ -74,14 +79,17 @@ class MyApp extends StatelessWidget {
           routes: Screen().routes,
           // home: MyHomePage(),
           home: auth.isAuth
-              ? HomePage()
+              ?const FloatingNavbar()
               : FutureBuilder(
                   future: auth.tryAutoLogin(),
-                  builder: (context, authResultSnapShot) =>
+                  builder: (
+                    context,
+                    authResultSnapShot,
+                  ) =>
                       authResultSnapShot.connectionState ==
                               ConnectionState.waiting
                           ? SplashPage()
-                          : MyHomePage(),
+                          :const MyHomePage(),
                 ),
         ),
       ),
@@ -95,9 +103,6 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return MainPage();
   }
 }
-
-

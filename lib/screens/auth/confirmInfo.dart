@@ -3,12 +3,17 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant_owner_app/models/http/firebaseStorage.dart';
 import 'package:restaurant_owner_app/models/restaurant.dart';
+import 'package:restaurant_owner_app/widgets/utils/addSpace.dart';
 
+import '../../models/provider/auth.dart';
+import '../../models/provider/restaurant/restaurantMenu.dart';
 import '../../models/verify.dart';
 import '../../widgets/account/accountWidget.dart';
 import '../../widgets/inputFormField.dart';
+import '../../widgets/utils/dropDownListForm.dart';
 
 class ConfirmInfoPage extends StatefulWidget {
   static const routeName = '/confirmInfoPage';
@@ -23,10 +28,11 @@ class _ConfirmInfoPageState extends State<ConfirmInfoPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   InputFormField? restaurantName;
   InputFormField? address;
-  File? workLicense;
-  File? commercialRegistry;
+  // File? workLicense;
+  // File? commercialRegistry;
   CardSetting? commercialRegistryCard;
   CardSetting? workLicenseCard;
+  CardSetting? imageProfile;
   Restaurant restaurant = Restaurant();
 
   Text imageText(File? file) {
@@ -55,6 +61,8 @@ class _ConfirmInfoPageState extends State<ConfirmInfoPage> {
       keyBoardType: TextInputType.name,
       label: 'Restaurant Name',
       hintText: '',
+      enabledBorderRadius: 12,
+      focusedBorderRadius: 12,
       validator: (value) => Verify().isUserName(value),
       onSaved: (String value) => restaurant.setRestaurantName(value),
     );
@@ -63,6 +71,8 @@ class _ConfirmInfoPageState extends State<ConfirmInfoPage> {
       inputIcon: Icons.location_on,
       keyBoardType: TextInputType.name,
       label: 'Address',
+      enabledBorderRadius: 12,
+      focusedBorderRadius: 12,
       hintText: 'Amman',
       validator: (value) => Verify().isAddress(value),
       onSaved: (String value) => restaurant.setAddress(value),
@@ -76,7 +86,7 @@ class _ConfirmInfoPageState extends State<ConfirmInfoPage> {
             await ImagePicker().pickImage(source: ImageSource.gallery);
         if (myFile == null) return;
         setState(() {
-          commercialRegistry = File(myFile.path);
+          restaurant.setCommercialRegistry(File(myFile.path));
         });
       },
       text: 'Upload Commercial Registry image',
@@ -90,20 +100,39 @@ class _ConfirmInfoPageState extends State<ConfirmInfoPage> {
             await ImagePicker().pickImage(source: ImageSource.gallery);
         if (myFile == null) return;
         setState(() {
-          workLicense = File(myFile.path);
+          restaurant.setWorkLicense(File(myFile.path));
         });
       },
       text: 'Upload Work License image',
     );
+
+    imageProfile = CardSetting(
+      tailIcon: Icons.upload_rounded,
+      icon: Icons.image_search_rounded,
+      onPressed: () async {
+        final myFile =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+        if (myFile == null) return;
+        setState(() {
+          restaurant.setImageProfile(File(myFile.path));
+        });
+      },
+      text: 'Upload restaurant profile image',
+    );
+
     // TODO: implement initState
     super.initState();
   }
 
   Future<void> _submit() async {
+    setState(() {
+      _isLoading = true;
+    });
     log('submitted form');
     if (!_formKey.currentState!.validate() ||
-        commercialRegistry == null ||
-        workLicense == null) {
+        restaurant.commercialRegistry == null ||
+        restaurant.workLicense == null ||
+        restaurant.imageProfile == null) {
       log('invalid inputs');
       // Invalid!
       return;
@@ -111,48 +140,75 @@ class _ConfirmInfoPageState extends State<ConfirmInfoPage> {
 
     _formKey.currentState!.save();
 
-    setState(() {
-      _isLoading = true;
-    });
     try {
-      FirebaseStorage().uploadImage(commercialRegistry!, "commercialRegistry");
-      FirebaseStorage().uploadImage(workLicense!, "workLicense");
-
-      restaurant.updateRestaurantInfo(
-        restaurant.restaurantName!,
-        restaurant.address!,
-      );
+      await restaurant.updateRestaurantInfo();
+      await Provider.of<Auth>(context, listen: false).getUserInfo();
 
       log('All done <*_->');
     } catch (error) {
       log('something went wrong ConfirmInfoPage file , submit function \nError:');
       log(error.toString());
     }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Confirm Info")),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            restaurantName!,
-            address!,
-            commercialRegistryCard!,
-            imageText(commercialRegistry),
-            workLicenseCard!,
-            imageText(workLicense),
-            SizedBox(
-              width: 330,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: _submit,
-                child: const Text("continue"),
+      // appBar: AppBar(title: const Text("Confirm Info")),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  restaurantName!,
+                  address!,
+                   DropDownListForm(
+                    title: "restaurant type",
+                    onSave: (String value) => restaurant.setType(value),
+                    listItem: Category().restaurantCategories,
+                    errorMessage: "please select restaurant's type",
+                    buttonColor: Colors.white,
+                    paddingButtonHorizontal: 10,
+                  ),
+                  imageProfile!,
+                 
+                  imageText(restaurant.imageProfile),
+                  commercialRegistryCard!,
+                  imageText(restaurant.commercialRegistry),
+                  workLicenseCard!,
+                  imageText(restaurant.workLicense), 
+                  AddVerticalSpace(10),
+                  SizedBox(
+                    width: 330,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: _submit,
+                      child: const Text("continue"),
+                    ),
+                  ),
+                  AddVerticalSpace(20),
+                  ElevatedButton(
+                    onPressed: () async {
+                      Provider.of<Auth>(context, listen: false).logout();
+                      log('logout');
+                    },
+                    child: const Text("Logout"),
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

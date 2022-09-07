@@ -1,14 +1,18 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:restaurant_owner_app/models/http/firebaseStorage.dart';
 import 'package:restaurant_owner_app/models/localStorage.dart';
 import 'package:restaurant_owner_app/models/restaurant.dart';
+import 'package:restaurant_owner_app/models/provider/restaurant/restaurantMenu.dart';
 import 'package:restaurant_owner_app/screens/auth/confirmInfo.dart';
-import 'package:restaurant_owner_app/screens/restaurant/Menu.dart';
+import 'package:restaurant_owner_app/screens/restaurant/addMealPage.dart';
+import 'package:restaurant_owner_app/screens/splashPage.dart';
 import 'package:restaurant_owner_app/screens/test.dart';
+import 'package:restaurant_owner_app/widgets/utils/floatingNavbar.dart';
 
 import '/models/screen.dart';
-import '/models/http/auth.dart';
+import '../models/provider/auth.dart';
 // import '../screens/profile/accountSettingPage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,12 +28,25 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // bottomNavigationBar: FloatingNavbar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            ElevatedButton(
+              onPressed: () async {
+                Screen().pushNamed(context, SplashPage.routeName);
+              },
+              child: const Text("splash"),
+            ),
             ElevatedButton(
               onPressed: () async {
                 Provider.of<Auth>(context, listen: false).logout();
@@ -39,50 +56,13 @@ class _HomePageState extends State<HomePage> {
             ),
             ElevatedButton(
               onPressed: () async {
-                Screen().pushNamed(context, Menu.routeName);
-              },
-              child: const Text("Menu"),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                Restaurant restaurant = Restaurant();
-                //  restaurant.updateRestaurantInfo();
-              },
-              child: const Text("update data"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Screen().pushNamed(context, Test.routeName);
-              },
-              child: const Text('test image'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Screen().pushNamed(context, ConfirmInfoPage.routeName);
-              },
-              child: const Text('ConfirmInfoPage'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                log('Setting');
-              },
-              child: const Text("Setting"),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                // final prefs = await SharedPreferences.getInstance();
-                // final extractedUserData = await json.decode(
-                //     prefs.getString(Auth.authUserInfo).toString()) as Map;
-                final extractedUserData = LocalStorage().userInfo;
+                final extractedUserData = await LocalStorage().userInfo;
                 final data = await Provider.of<Auth>(context, listen: false)
                     .getUserInfo();
-                //  final s=await Provider.of<Auth>(context, listen: false).saveAauthUserInfoInLocalStorage(data);
-                log('Data nigga22222222222222222 $data \n user name: ${data['userName']}');
-                log('Data nigga $extractedUserData \n user name: ');
-
-                // log(extractedUserData.toString());
+                log('User Data  $data \n user name: ${data['userName']}');
+                log('\nuser info  $extractedUserData \n ');
               },
-              child: const Text("Fetch data"),
+              child: const Text("Fetch user data"),
             ),
           ],
         ),

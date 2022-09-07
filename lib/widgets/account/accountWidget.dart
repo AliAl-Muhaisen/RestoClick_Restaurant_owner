@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../themes/stander/colors.dart';
 import '../utils/addSpace.dart';
 
 SizedBox ProfilePic({bool isEdit = false}) {
@@ -73,7 +74,6 @@ class CardSetting extends StatelessWidget {
         child: Row(
           children: [
             Icon(
-              // Icons.manage_accounts_outlined,
               icon,
               color: Colors.red[300],
             ),
@@ -91,8 +91,7 @@ class CardSetting extends StatelessWidget {
 
 class CardMealMenu extends StatefulWidget {
   Function(bool) onPressed;
-  // final icon;
-  // IconData? tailIcon;
+ 
   String text;
 
   CardMealMenu({
@@ -116,7 +115,7 @@ class _CardMealMenuState extends State<CardMealMenu> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: TextButton(
         style: TextButton.styleFrom(
-          backgroundColor: Color(0xFFF5F5F9),
+          backgroundColor: cardBackground,
           padding: const EdgeInsets.all(20),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
@@ -129,11 +128,7 @@ class _CardMealMenuState extends State<CardMealMenu> {
         },
         child: Row(
           children: [
-            // Icon(
-            //   // Icons.manage_accounts_outlined,
-            //   icon,
-            //   color: Colors.red[300],
-            // ),
+           
             AddHorizontalSpace(20),
             Expanded(
               child: Text(

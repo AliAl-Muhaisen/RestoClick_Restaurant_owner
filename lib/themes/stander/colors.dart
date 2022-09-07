@@ -29,5 +29,9 @@ const Color shrineErrorRed = Color(0xFFC5032B);
 
 const Color shrineSurfaceWhite = Color(0xFFFFFBFA);
 const Color shrineBackgroundWhite = Colors.white;
+const Color cardBackground = Color(0xFFF5F5F9);
+const Color cardMealItem = Color(0xFFF5F5F9);//or Color.fromARGB(244, 255, 249, 249)
+const Color floatingNavbarColors =Color.fromARGB(193, 255, 255, 255);// Color.fromARGB(255, 223, 230, 223);
 
+const Color spinLoadingColor=Color.fromARGB(255, 185, 12, 12);
 const defaultLetterSpacing = 0.03;

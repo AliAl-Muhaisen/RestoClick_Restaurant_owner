@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'dart:developer';
 //
 import 'package:flutter/material.dart';
+import '../../screens/auth/confirmInfo.dart';
 import '../localStorage.dart';
 
-import './API/apiKey.dart';
-import './http_exception.dart';
+import '../screen.dart';
+import '../http/API/apiKey.dart';
+import '../http/http_exception.dart';
 import '../user.dart';
 import 'package:http/http.dart' as http;
 
@@ -36,10 +38,13 @@ class Auth with ChangeNotifier {
   DateTime? _expiryDate;
   String? _userId;
   Timer? _authTimer;
-  static const String authUserData = "authUserData";
-  static const String authUserInfo = "authUserInfo";
+  bool _isCompleteInfo = false;
+  bool get isCompleteInfo {
+    return _isCompleteInfo;
+  }
+
   bool get isAuth {
-    return token != null;
+    return (token != null);
   }
 
   String? get token {
@@ -58,12 +63,13 @@ class Auth with ChangeNotifier {
   Future<void> _authenticate(
     String email,
     String password,
-    String apiKey,
-  ) async {
+    String apiKey, {
+    bool isLogin = false,
+  }) async {
     final url = Uri.parse(apiKey);
     email = email.toLowerCase();
     try {
-      log('url $url');
+      // log('url $url');
       final response = await http.post(
         url,
         body: json.encode(
@@ -74,10 +80,12 @@ class Auth with ChangeNotifier {
           },
         ),
       );
-      final responseData = json.decode(response.body);
+      Map responseData = json.decode(response.body);
+
       if (responseData['error'] != null) {
         throw HttpException(responseData['error']['message']);
       }
+      log('responseData $responseData');
       _token = responseData['idToken'];
       _userId = responseData['localId'];
       _expiryDate = DateTime.now().add(
@@ -89,50 +97,55 @@ class Auth with ChangeNotifier {
       );
 
       _autoLogout();
-      Timer(const Duration(seconds: 2), () async {
-        Map info = await getUserInfo();
 
-        await LocalStorage().saveAuthUserInfoInLocalStorage(info);
-
-        log("restaurant info ${info['restaurantInfo']['isActive']}");
-        // if (info['email'] == null) {
-        //   log('\n\n nulllllllllllllllllll\n\n');
-        //   _token = null;
-        //   // throw Error();
-        //   throw HttpException('This is not a restaurant account');
-        // }
-      });
-      // await saveAuthUserDataInLocalStorage(
-      //   token,
-      //   userId,
-      //   _expiryDate,
-      // );
       await LocalStorage().saveAuthUserDataInLocalStorage(
         token!,
         userId!,
         _expiryDate!,
       );
-      notifyListeners();
-
-      // await saveAuthUserDataInLocalStorage();
-
+      if (isLogin) {
+        await _waitToCreateUserRecord();
+      }
     } catch (error) {
       log('Error auth file authenticate function $error');
-      throw error;
+      rethrow;
     }
   }
 
-  Future<void> login(
-    String email,
-    String password,
-  ) async {
-    final url = Uri.parse(Apikey().login);
-    await _authenticate(email, password, (Apikey().login));
+  Future<void> _waitToCreateUserRecord() async {
+    Map info = await getUserInfo();
+    await LocalStorage().saveAuthUserInfoInLocalStorage(info);
+    if (info.isEmpty) {
+      log('not a restaurant account');
+      _token = null;
+      throw Error();
+    } else if (!info.containsKey('restaurantInfo')) {
+      log('Complete restaurant information');
+    } else {
+      log('All done ${info.containsKey('restaurantInfo')} $info');
+      _isCompleteInfo = true;
+    }
+    notifyListeners();
   }
 
-  Future<void> signup(User user) async {
+  Future<void> login(
+      String email, String password, BuildContext context) async {
+    final url = Uri.parse(Apikey().login);
+    await _authenticate(
+      email,
+      password,
+      (Apikey().login),
+      isLogin: true,
+    );
+  }
+
+  Future<void> signup(
+    User user,
+  ) async {
     await _authenticate(user.email, user.password, (Apikey().signup));
     await setUserInfo(user.name, user.phoneNumber, user.email);
+    await _waitToCreateUserRecord();
+    // Screen().pushReplacementNamed(context, ConfirmInfoPage.routeName);
   }
 
   Future<bool> tryAutoLogin() async {
@@ -140,25 +153,16 @@ class Auth with ChangeNotifier {
 
     //? Attempt to auto-login
 
-    // final prefs = await SharedPreferences.getInstance();
-    // if (!prefs.containsKey(authUserData)) {
-    //   // ! Auto login failed
-    //   log('Auto login failed');
-    //   return false;
-    // }
-
-    // final extractedUserData =
-    // json.decode(prefs.getString(authUserData).toString()) as Map;
-    // log('extractedUserData ${extractedUserData.toString()}');
-    final expiryDate = DateTime.parse(LocalStorage().expiryDate.toString());
+    final expiryDate = DateTime.parse(await LocalStorage().expiryDate);
     if (expiryDate.isBefore(DateTime.now())) {
       // ! Auto login failed
       log('Auto login failed');
       return false;
     }
-    _token = LocalStorage().token.toString();
-    _userId = LocalStorage().userId.toString();
+    _token = await LocalStorage().token;
+    _userId = await LocalStorage().userId;
     _expiryDate = expiryDate;
+
     notifyListeners();
     _autoLogout();
     log('successfully logged in');
@@ -195,15 +199,11 @@ class Auth with ChangeNotifier {
           "userName": name,
           "email": email,
           "phoneNumber": phoneNumber,
-          "restaurantInfo": {
-            "isActive": "false",
-            "name": "",
-            "address": "",
-          }
+          "isActive": "false",
+          "isCompleteInfo": "false",
         },
       );
-      final response = await http.put(url, body: body);
-      // final responseData = json.decode(response.body);
+      await http.put(url, body: body);
     } catch (error) {
       log('something went wrong auth file , function userInfo');
       log(error.toString());
@@ -214,24 +214,19 @@ class Auth with ChangeNotifier {
     try {
       String api = await Apikey().userInfo;
       final url = Uri.parse(api.toString());
-      log('url $url');
+      // log('url $url');
       http.Response response = await http.get(url);
 
       Map responseData = await json.decode(response.body) as Map;
-      log('auth file function getUserInfo responseData ${responseData.toString()}');
-      log('auth file function getUserInfo response ${response.toString()}');
-      // if (responseData == null) {
-      //   log('\n\n nulllllllllllllllllll\n\n');
-      //   //  return throw Error();
-      //   return throw HttpException('This is not a restaurant account');
-      // }
-      await LocalStorage().saveAuthUserInfoInLocalStorage(responseData);
+      // log('auth file function getUserInfo responseData ${responseData.toString()}');
+      // log('auth file function getUserInfo response ${response.toString()}');
 
+      await LocalStorage().saveAuthUserInfoInLocalStorage(responseData);
+      notifyListeners();
       return responseData;
     } catch (error) {
       log('auth file function getUserInfo \nError: $error');
     }
-    print('shit');
     return {};
   }
 
@@ -247,7 +242,7 @@ class Auth with ChangeNotifier {
           "phoneNumber": phoneNumber,
         },
       );
-      final response = await http.patch(url, body: body);
+      await http.patch(url, body: body);
       Map info = await getUserInfo();
       await LocalStorage().saveAuthUserInfoInLocalStorage(info);
     } catch (error) {
@@ -260,9 +255,8 @@ class Auth with ChangeNotifier {
     //? Send password reset email
     email = email.trim();
     try {
-      // log("forgot password key ${Apikey().forgotPassword.toString()}");
       final url = Uri.parse(Apikey().forgotPassword.toString());
-      log('url $url');
+      // log('url $url');
       http.Response response = await http.post(
         url,
         body: json.encode({

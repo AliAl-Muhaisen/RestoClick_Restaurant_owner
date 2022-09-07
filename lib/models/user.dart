@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import './http/auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'localStorage.dart';
 
 class User {
     String? _email;
@@ -62,9 +61,9 @@ class User {
     return _phoneNumber!;
   }
   static Future<Map>  userInfo() async{
-    final prefs = await SharedPreferences.getInstance();
-    final data=prefs.get(Auth.authUserInfo).toString();
-   final dataInfo= json.decode(data);
+    // final prefs = await SharedPreferences.getInstance();
+    // final data=prefs.get(Auth.authUserInfo).toString();
+   final dataInfo= await LocalStorage().userInfo;
     log(" userInfo ${dataInfo['userName']}");
     return dataInfo;
   }

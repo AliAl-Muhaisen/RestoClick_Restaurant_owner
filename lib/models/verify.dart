@@ -11,31 +11,54 @@ class Verify {
     return _verify;
   }
   Verify._internal();
-   String? isImage(File? file)
-  {
-    if(file == null)
-    {
+  List<String> validInputsNumber = [
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+  ];
+
+  String? isPrice({String? price}) {
+    var digits = price!.trim().split('');
+    if (digits.isEmpty || digits.length > 5) {
+      return "please enter a valid price";
+    }
+    digits.map((digit) {
+      if (!validInputsNumber.contains(digit)) {
+        return "please enter a valid price";
+      }
+    });
+
+    return null;
+  }
+
+  String? isImage(File? file) {
+    if (file == null) {
       return "Uploaded file is not a valid image";
     }
     return null;
   }
-  String? isAddress(String? address)
-  {
-    if(address!.length <3 || address.isEmpty)
-    {
+
+  String? isAddress(String? address) {
+    if (address!.length < 3 || address.isEmpty) {
       return "invalid address";
     }
     return null;
   }
 
-  String? isRestaurantName(String? restaurantName)
-  {
-    if(restaurantName!.length <3 || restaurantName.isEmpty)
-    {
+  String? isRestaurantName(String? restaurantName) {
+    if (restaurantName!.length < 3 || restaurantName.isEmpty) {
       return "invalid name";
     }
     return null;
   }
+
   String? isEMail(String? email) {
     // to check if the email address valid or not
     email = email!.trim();
@@ -63,16 +86,7 @@ class Verify {
   String? isPhoneNumber(String? phoneNumber) {
     List<String> validInputs = [
       '+',
-      '0',
-      '1',
-      '2',
-      '3',
-      '4',
-      '5',
-      '6',
-      '7',
-      '8',
-      '9',
+      ...validInputsNumber,
     ];
     var digits = phoneNumber!.trim().split('');
     if (digits.length < 7 || digits.length > 25) {
@@ -80,9 +94,7 @@ class Verify {
 
       // return '<7';
     }
-    // if (digits.length > 25) {
-    //   return '>25';
-    // }
+
     digits.map((digit) {
       if (!digits.contains(digit)) {
         return LocaleKeys.inputForm_phoneNumber_errorMessage_invalid.tr();

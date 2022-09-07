@@ -1,15 +1,18 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_owner_app/models/http/http_exception.dart';
-import '../../models/http/auth.dart';
+import '../../models/provider/auth.dart';
 import '../../models/screen.dart';
 import '../../models/user.dart';
 import '../../models/verify.dart';
 import '../../themes/stander/buttons.dart';
 import '../../translations/locale_keys.dart';
 import '../../widgets/inputFormField.dart';
+import '../../widgets/loadingSpin.dart';
 import '../../widgets/utils/addSpace.dart';
 import '../../widgets/utils/showDialog.dart';
 
@@ -49,11 +52,15 @@ class _LoginPageState extends State<LoginPage> {
     );
     super.initState();
   }
-
+  
+  @override
+  void dispose(){
+    super.dispose();
+  }
   Future<void> _submit() async {
-    print('submitted form');
+    log('submitted form');
     if (!_formKey.currentState!.validate()) {
-      print('invalid inputs');
+      log('invalid inputs');
       // Invalid!
       return;
     }
@@ -64,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
     });
     try {
       await Provider.of<Auth>(context, listen: false)
-          .login(user.email, user.password);
+          .login(user.email, user.password,context);
       Screen().pop(context);
 
       // showHttpDialog('Account created successfully', context);
@@ -80,8 +87,8 @@ class _LoginPageState extends State<LoginPage> {
       showHttpDialog('Error', errorMessage, 'Close', context);
       // showHttpDialog(errorMessage,context);
     } catch (error) {
-      print('error');
-      print(error);
+      log('error');
+      log(error.toString());
       showHttpDialog(
         LocaleKeys.showHttpDialog_titleAndMessage_error_clientError_title.tr(),
         LocaleKeys.showHttpDialog_titleAndMessage_error_clientError_message
@@ -112,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
               const ForgotPasswordButton(),
               AddVerticalSpace(15),
               if (_isLoading)
-                const CircularProgressIndicator()
+                 spinKitLoading()
               else
                 SizedBox(
                   width: MediaQuery.of(context).size.width - 30,
