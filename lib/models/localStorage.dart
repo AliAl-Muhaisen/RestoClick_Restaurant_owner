@@ -1,15 +1,33 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:ffi';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorage {
+
+  // ignore: slash_for_doc_comments
+  /** 
+  *? info
+  *? void = - and get = +
+  *# Functions
+  *$ -saveAuthUserDataInLocalStorage
+  *$ -removeLocalStorage
+  *$ -saveAuthUserInfoInLocalStorage
+  *$ + authData
+  *$ + _getAuthData
+  *$ + userInfo
+  *$ + _getUserInfo
+  *$ + userName
+  *$ + token
+  *$ + phoneNumber
+  *$ + email
+  *$ + isCompleteInfo
+  *$ + userId
+  *$ + expiryDate
+  */
+
   static final LocalStorage _localStorage = LocalStorage._internal();
-  // static const String authUserData = "authUserData";
-  // static const String authUserInfo = "authUserInfo";
-  // Map? authInfo;
-  // Map? userInfo;
+
   factory LocalStorage() {
     return _localStorage;
   }

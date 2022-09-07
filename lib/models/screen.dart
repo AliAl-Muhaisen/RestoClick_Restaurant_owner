@@ -17,6 +17,20 @@ import 'package:flutter/material.dart';
 import '../screens/auth/loginPage.dart';
 
 class Screen {
+   // ignore: slash_for_doc_comments
+  /**
+  *? info
+  *? void = - and get = + setAndGet =
+  *# Functions
+  *$ - pushNamed
+  *$ - pushReplacementNamed
+  *$ - pop
+  *$ - navigatorPush
+  *$ = 
+  *$ + 
+  *$ + 
+  *$ + 
+  */
   static final Screen _screen = Screen._internal();
   factory Screen() {
     return _screen;

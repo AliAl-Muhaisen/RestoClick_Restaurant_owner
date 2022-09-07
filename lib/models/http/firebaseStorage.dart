@@ -5,6 +5,21 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../localStorage.dart';
 
 class FirebaseStorage {
+  // ignore: slash_for_doc_comments
+  /**
+  *? info
+  *? void = - and get = +
+  *# Functions
+  *$ - uploadImage
+  *$ - _uploadImage
+  *$ - _deleteImage
+  *$ - deleteMealImage
+  *$ + getImageUrlMeal
+  *$ + uploadImageMenuMeal
+  *$ + createFile
+  *$ + _getImageUrl
+  *$ + getRestaurantRegistrationImageUrl
+  */
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
 

@@ -7,6 +7,23 @@ import 'http/API/apiKey.dart';
 import 'http/firebaseStorage.dart';
 
 class Restaurant {
+  // ignore: slash_for_doc_comments
+  /**
+  *? info
+  *? void = - and get = + setAndGet =
+  *# Functions
+  *$ - updateRestaurantInfo
+  *$ = imageUrl
+  *$ = workLicense
+  *$ = imageProfile
+  *$ = address
+  *$ = type
+  *$ = categories 
+  *$ = 
+  *$ + 
+  *$ + 
+  *$ + 
+  */
   String? _restaurantName;
   File? _workLicense;
   File? _commercialRegistry;

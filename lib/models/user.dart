@@ -4,6 +4,21 @@ import 'dart:developer';
 import 'localStorage.dart';
 
 class User {
+   // ignore: slash_for_doc_comments
+  /**
+  *? info
+  *? void = - and get = + setAndGet =
+  *# Functions
+  *$ - 
+  *$ - 
+  *$ = email
+  *$ = password
+  *$ = name
+  *$ = imageProfile
+  *$ = phoneNumber
+  *$ + userInfo
+  *$ + 
+  */
     String? _email;
     String? _password;
    String? _name;

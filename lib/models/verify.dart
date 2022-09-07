@@ -6,6 +6,22 @@ import 'package:flutter/material.dart';
 import '../translations/locale_keys.dart';
 
 class Verify {
+
+  // ignore: slash_for_doc_comments
+  /**
+  *? info
+  *? void = - and get = + setAndGet =
+  *# Functions
+  *$ + isPrice
+  *$ + isImage
+  *$ + isAddress
+  *$ + isRestaurantName
+  *$ + isEMail
+  *$ + isPassword
+  *$ + isPhoneNumber
+  *$ + isUserName
+  *$ + 
+  */
   static final Verify _verify = Verify._internal();
   factory Verify() {
     return _verify;

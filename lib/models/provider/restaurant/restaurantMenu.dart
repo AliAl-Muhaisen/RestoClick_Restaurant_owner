@@ -7,6 +7,16 @@ import '../../http/API/apiKey.dart';
 import 'package:http/http.dart' as http;
 
 class RestaurantMenu with ChangeNotifier {
+  // ignore: slash_for_doc_comments
+  /**
+  *? info
+  *? void = - and get = + setAndGet =
+  *# Functions
+  *$ = 
+  *$ + menu
+  *$ + restaurantMenu
+  *$ + 
+  */
   List<Meal> _mealList = [];
 
   Future<Map> get menu async {
@@ -33,11 +43,19 @@ class RestaurantMenu with ChangeNotifier {
   List<Meal> get restaurantMenu {
     return [..._mealList];
   }
-
-  
 }
 
 class Category {
+  // ignore: slash_for_doc_comments
+  /**
+  *? info
+  *? void = - and get = + setAndGet =
+  *# Functions
+  *$ + mealCategories
+  *$ + _categories
+  *$ + restaurantMenu
+  *$ + restaurantCategories
+  */
   static final Category _category = Category._internal();
   factory Category() {
     return _category;
@@ -45,21 +63,31 @@ class Category {
 
   Category._internal();
 
-  final List<String> _categories = [
+  final List<String> _restaurantCategories = [
     'Arabic Food'
-    'Italian',
+        'Italian',
     'Hamburgers',
     'German',
     'Breakfast',
     'Asian',
     'French',
     'SeaFood',
-    
+  ];
+  final List<String> _mealCategories = [
+    'Arabic Food'
+        'Italian',
+    'Hamburgers',
+    'German',
+    'Breakfast',
+    'Asian',
+    'French',
+    'SeaFood',
   ];
   List<String> get restaurantCategories {
-    return [..._categories];
+    return [..._restaurantCategories];
   }
+
   List<String> get mealCategories {
-    return [..._categories];
+    return [..._mealCategories];
   }
 }

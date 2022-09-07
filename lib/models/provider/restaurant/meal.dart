@@ -9,6 +9,25 @@ import '../../http/API/apiKey.dart';
 import 'package:http/http.dart' as http;
 
 class Meal with ChangeNotifier {
+
+  // ignore: slash_for_doc_comments
+  /**
+  *? info
+  *? void = - and get = + setAndGet =
+  *# Functions
+  *$ - uploadToDataBase
+  *$ - deleteMeal
+  *$ = imageUrl
+  *$ = title
+  *$ = price
+  *$ = isGlutenFree
+  *$ = isVegetarian
+  *$ = categories 
+  *$ = 
+  *$ + 
+  *$ + 
+  *$ + 
+  */
   String? _id; //! just for build constructor only
   String? _imageUrl; //! just for build constructor only
   String? _title;
