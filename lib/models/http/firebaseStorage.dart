@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'dart:developer';
 import 'dart:io';
 
@@ -24,12 +25,15 @@ class FirebaseStorage {
       firebase_storage.FirebaseStorage.instance;
 
   static final FirebaseStorage _fireStorage = FirebaseStorage._internal();
+
+  /// To store and upload the images and files to the Firebase storage
   factory FirebaseStorage() {
     return _fireStorage;
   }
 
   FirebaseStorage._internal();
 
+  /// To upload the image to the cloud storage
   Future<void> uploadImage(File file, String fileName) async {
     String userId = await LocalStorage().userId;
     String directory =
@@ -40,6 +44,7 @@ class FirebaseStorage {
     await _uploadImage(file, directory, fileName);
   }
 
+  /// To upload the image to the restaurantMenu folder in the cloud
   Future<String> uploadImageMenuMeal(File file, String fileName) async {
     String userId = await LocalStorage().userId;
     if (userId == null) {
@@ -53,20 +58,20 @@ class FirebaseStorage {
     return imageUrl;
   }
 
+  /// This function will handle the upload process,
+  /// it is the channel between the app and the cloud.
   Future<void> _uploadImage(
     File file,
     String directory,
     String fileName,
   ) async {
-    log('------------------- *-* -_- ^-^ ^_^ <-_-> ');
-
     file = createFile(file);
     if (file == null) return;
 
     String imageName = file.path.split('/').last;
     try {
-      final r = await storage.ref('$directory/$fileName').putFile(file);
-      log('this r ${r.ref}\n\n$r');
+      await storage.ref('$directory/$fileName').putFile(file);
+      log("image uploaded successfully");
     } catch (error) {
       log('something went wrong FirebaseStorage file , uploadImage function \nError:');
       log(error.toString());
@@ -77,18 +82,18 @@ class FirebaseStorage {
     return File(file.path);
   }
 
+  /// To return imagesUrl
   Future<String> _getImageUrl(String directory, String fileName) async {
     String userId = await LocalStorage().userId;
 
     String imagesUrl =
         await storage.ref('$directory/$userId/$fileName').getDownloadURL();
-    log('my images meal ${imagesUrl.toString()}');
+
     return imagesUrl;
   }
 
+  /// To return imagesUrl from registration folder
   Future<String> getRestaurantRegistrationImageUrl(String fileName) async {
-    // String userId = await LocalStorage().userId;
-
     String imagesUrl = await _getImageUrl(
       FileDirectory.restaurantRegistration.toShortString(),
       fileName,
@@ -96,13 +101,11 @@ class FirebaseStorage {
     return imagesUrl;
   }
 
+  /// To return imagesUrl from menu folder
   Future<String> getImageUrlMeal(String fileName) async {
     String imagesUrl = await _getImageUrl(
         FileDirectory.restaurantMenu.toShortString(), fileName);
-    //  storage
-    //     .ref('${FileDirectory.restaurantMenu.toShortString()}/$userId/$fileName')
-    //     .getDownloadURL();
-    log('my images meal ${imagesUrl.toString()}');
+
     return imagesUrl;
   }
 
@@ -118,6 +121,7 @@ class FirebaseStorage {
     }
   }
 
+  /// To delete a file from the storage
   Future<void> deleteMealImage(
     String fileName,
   ) async {

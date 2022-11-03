@@ -3,36 +3,34 @@ import 'dart:convert';
 import 'dart:developer';
 //
 import 'package:flutter/material.dart';
-import '../../screens/auth/confirmInfo.dart';
 import '../localStorage.dart';
 
-import '../screen.dart';
 import '../http/API/apiKey.dart';
 import '../http/http_exception.dart';
 import '../user.dart';
 import 'package:http/http.dart' as http;
 
 class Auth with ChangeNotifier {
-  // ignore: slash_for_doc_comments
-  /**
-  *? Functions
+  ///## Auth, login, Signup and logout
 
-  *!-------
-  ** get token
-  * * get userId
-  *!-------
-  * * _authenticate   //?@param String email, String password,String apiKey,
-  **  login   //?@param String email, String password
-  ** signup //?@param User user
-  ** tryAutoLogin
-  **  _autoLogout
-  **  logout
-  **  setUserInfo //?@param String phoneNumber, String userName
-  ** getUserInfo
-  ** updateUserInfo(String userName, String phoneNumber)
-  *# updateUserInfo(String userName, String phoneNumber)
-  *!--------
-  */
+  /// Functions
+
+  ///*!-------
+  ///** get token
+  /// * * get userId
+  ///*!-------
+  ///* * _authenticate   //?@param String email, String password,String apiKey,
+  ///**  login   //?@param String email, String password
+  ///** signup //?@param User user
+  ///** tryAutoLogin
+  ///**  _autoLogout
+  ///**  logout
+  ///**  setUserInfo //?@param String phoneNumber, String userName
+  ///** getUserInfo
+  ///** updateUserInfo(String userName, String phoneNumber)
+  /// *# updateUserInfo(String userName, String phoneNumber)
+  /// *!--------
+  ///
 
   String? _token;
   DateTime? _expiryDate;
@@ -43,6 +41,7 @@ class Auth with ChangeNotifier {
     return _isCompleteInfo;
   }
 
+  /// To check if the user is authenticated
   bool get isAuth {
     return (token != null);
   }
@@ -270,11 +269,6 @@ class Auth with ChangeNotifier {
   }
 
   static Future<Map> authInfo() async {
-    // final prefs = await SharedPreferences.getInstance();
-    // if (!prefs.containsKey(Auth.authUserData)) return {};
-    // final data = prefs.get(Auth.authUserData).toString();
-    // final dataInfo = json.decode(data);
-    // log(" userInfo ${dataInfo['token']}");
     final dataInfo = LocalStorage().userInfo;
     return dataInfo;
   }

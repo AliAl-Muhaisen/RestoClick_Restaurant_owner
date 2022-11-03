@@ -9,7 +9,6 @@ import '../../http/API/apiKey.dart';
 import 'package:http/http.dart' as http;
 
 class Meal with ChangeNotifier {
-
   // ignore: slash_for_doc_comments
   /**
   *? info
@@ -37,7 +36,9 @@ class Meal with ChangeNotifier {
   bool _isGlutenFree = false;
   bool _isVegetarian = false;
   String? _categories;
+  // default constructor
   Meal();
+  //constructor
   Meal.build(
       {required title,
       required imageUrl,
@@ -52,6 +53,7 @@ class Meal with ChangeNotifier {
     setIsGlutenFree(isGlutenFree);
     setIsVegetarian(isVegetarian);
   }
+  //constructor
   Meal.fromJson(Map<String, dynamic> mealData, String? mealId)
       : _title = mealData['title'] ?? '',
         _imageUrl = mealData['imageUrl'] ?? '',
@@ -138,7 +140,7 @@ class Meal with ChangeNotifier {
       log(responseData['name'].toString());
       String mealId = responseData['name'];
 
-      //?save image in firebase storage then take the url for that image add put it in database
+      //?save image in firebase storage then take the url for that image and put it in the database
       String imageUrl =
           await FirebaseStorage().uploadImageMenuMeal(imageFile!, mealId);
       api = await Apikey().updateAndDeleteMenuMeal(mealId);

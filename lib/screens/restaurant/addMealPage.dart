@@ -1,21 +1,16 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 import 'dart:io';
-
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:multiselect/multiselect.dart';
 
 import 'package:restaurant_owner_app/widgets/utils/addSpace.dart';
 import 'package:restaurant_owner_app/widgets/utils/showDialog.dart';
 
+import '../../models/provider/restaurant/category.dart';
 import '../../models/provider/restaurant/meal.dart';
-import '../../models/provider/restaurant/restaurantMenu.dart';
 import '../../models/screen.dart';
 import '../../models/verify.dart';
-import '../../themes/stander/colors.dart';
 import '../../widgets/account/accountWidget.dart';
 import '../../widgets/inputFormField.dart';
 import '../../widgets/loadingSpin.dart';
@@ -170,7 +165,7 @@ class _MealPageState extends State<MealPage> {
                     ),
                   AddVerticalSpace(20),
                   if (_isLoading)
-                     spinKitLoading()
+                    spinKitLoading()
                   else
                     SizedBox(
                       width: 330,
@@ -190,4 +185,3 @@ class _MealPageState extends State<MealPage> {
     );
   }
 }
-

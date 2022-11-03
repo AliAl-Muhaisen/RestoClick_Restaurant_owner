@@ -4,12 +4,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_owner_app/models/http/firebaseStorage.dart';
-import 'package:restaurant_owner_app/models/restaurant.dart';
-import 'package:restaurant_owner_app/widgets/utils/addSpace.dart';
+import '../../models/provider/restaurant/category.dart';
+import '../../models/restaurant.dart';
+import '../../widgets/loadingSpin.dart';
+import '../../widgets/utils/addSpace.dart';
 
 import '../../models/provider/auth.dart';
-import '../../models/provider/restaurant/restaurantMenu.dart';
 import '../../models/verify.dart';
 import '../../widgets/account/accountWidget.dart';
 import '../../widgets/inputFormField.dart';
@@ -145,6 +145,7 @@ class _ConfirmInfoPageState extends State<ConfirmInfoPage> {
       await Provider.of<Auth>(context, listen: false).getUserInfo();
 
       log('All done <*_->');
+      
     } catch (error) {
       log('something went wrong ConfirmInfoPage file , submit function \nError:');
       log(error.toString());
@@ -153,6 +154,7 @@ class _ConfirmInfoPageState extends State<ConfirmInfoPage> {
       _isLoading = false;
     });
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -173,7 +175,7 @@ class _ConfirmInfoPageState extends State<ConfirmInfoPage> {
                 children: [
                   restaurantName!,
                   address!,
-                   DropDownListForm(
+                  DropDownListForm(
                     title: "restaurant type",
                     onSave: (String value) => restaurant.setType(value),
                     listItem: Category().restaurantCategories,
@@ -182,29 +184,32 @@ class _ConfirmInfoPageState extends State<ConfirmInfoPage> {
                     paddingButtonHorizontal: 10,
                   ),
                   imageProfile!,
-                 
                   imageText(restaurant.imageProfile),
                   commercialRegistryCard!,
                   imageText(restaurant.commercialRegistry),
                   workLicenseCard!,
-                  imageText(restaurant.workLicense), 
+                  imageText(restaurant.workLicense),
                   AddVerticalSpace(10),
-                  SizedBox(
-                    width: 330,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: _submit,
-                      child: const Text("continue"),
+                  if (_isLoading)
+                    spinKitLoading()
+                  else
+                    SizedBox(
+                      width: 330,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: _submit,
+                        child: const Text("continue"),
+                      ),
                     ),
-                  ),
                   AddVerticalSpace(20),
-                  ElevatedButton(
-                    onPressed: () async {
-                      Provider.of<Auth>(context, listen: false).logout();
-                      log('logout');
-                    },
-                    child: const Text("Logout"),
-                  ),
+                  if (!_isLoading)
+                    ElevatedButton(
+                      onPressed: () async {
+                        Provider.of<Auth>(context, listen: false).logout();
+                        log('logout');
+                      },
+                      child: const Text("Logout"),
+                    ),
                 ],
               ),
             ),

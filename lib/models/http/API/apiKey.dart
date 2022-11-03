@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '/models/localStorage.dart';
@@ -8,6 +5,10 @@ import '/models/localStorage.dart';
 class Apikey with ChangeNotifier {
   static final Apikey _apikey = Apikey._internal();
 
+  /// This class is responsible to manage and handle API in the application.
+  /// It will help you to connect to other servers outside the application,
+  ///  you can call the back-end server and cloud only through it.
+  /// So it is work as a channel between the app and  the servers.
   factory Apikey() {
     return _apikey;
   }
@@ -35,11 +36,7 @@ class Apikey with ChangeNotifier {
   }
 
   Future<String> get userInfo async {
-    // final prefs = await SharedPreferences.getInstance();
-    // final extractedUserData =
-    //     await json.decode(prefs.getString(Auth.authUserData).toString()) as Map;
-    // final token = await extractedUserData['token'] as String?;
-    // final userId = await extractedUserData['userId'] as String?;
+    /// To get [user] information from the database
     final token = await LocalStorage().token;
     final userId = await LocalStorage().userId;
     String url = getAPIbyKey('DataBase').toString() +
@@ -49,6 +46,8 @@ class Apikey with ChangeNotifier {
   }
 
   Future<String> get menu async {
+    /// To get [menu] information and [meals] from the database
+
     final token = await LocalStorage().token;
     final userId = await LocalStorage().userId;
     String url = getAPIbyKey('DataBase').toString() +
@@ -58,6 +57,8 @@ class Apikey with ChangeNotifier {
   }
 
   Future<String> updateAndDeleteMenuMeal(String mealId) async {
+    /// To update or Delete [Menu] or [Meal] from the database
+
     final token = await LocalStorage().token;
     final userId = await LocalStorage().userId;
     String url = getAPIbyKey('DataBase').toString() +

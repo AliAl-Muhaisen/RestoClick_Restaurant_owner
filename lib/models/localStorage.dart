@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorage {
-
   // ignore: slash_for_doc_comments
   /** 
   *? info
@@ -28,11 +27,14 @@ class LocalStorage {
 
   static final LocalStorage _localStorage = LocalStorage._internal();
 
+  /// To store data in local storage (device)
   factory LocalStorage() {
     return _localStorage;
   }
 
   LocalStorage._internal();
+
+  /// It is store the auth info like token, userId and token expiryDate
   Future<void> saveAuthUserDataInLocalStorage(
     String token,
     String userId,
@@ -52,6 +54,7 @@ class LocalStorage {
     // log('authUserData saved with value : ${prefs.get(VarName.authData.toShortString()).toString()}');
   }
 
+  /// It is store the user info like userName, email, phoneNumber and isCompleteInfo
   Future<void> saveAuthUserInfoInLocalStorage(Map info) async {
     final prefs = await SharedPreferences.getInstance();
     log('local storage file');
@@ -69,6 +72,7 @@ class LocalStorage {
     // log('authUserInfo saved with value : ${prefs.get(VarName.userInfo.toShortString()).toString()}');
   }
 
+  /// remove Local Storage
   Future<void> removeLocalStorage() async {
     log('local storage file remove');
 
@@ -76,8 +80,6 @@ class LocalStorage {
     // prefs.remove(authUserData);
     prefs.clear();
   }
-
-  
 
   Future<Map?> get authData async {
     final prefs = await SharedPreferences.getInstance();
@@ -101,6 +103,7 @@ class LocalStorage {
     return value.toString();
   }
 
+  /// get userInfo from local storage
   Future<Map> get userInfo async {
     final prefs = await SharedPreferences.getInstance();
     final extractedUserData = await json.decode(
@@ -115,14 +118,13 @@ class LocalStorage {
     return value.toString();
   }
 
+  /// get userName from local storage
   Future<String> get userName async {
-    //? get token from local storage
-    log('get userName');
-
     final userName = await _getUserInfo(VarName.userName.toShortString());
     return userName.toString();
   }
 
+  /// get phoneNumber from local storage
   Future<String> get phoneNumber async {
     //? get token from local storage
     log('get phoneNumber');
@@ -131,6 +133,7 @@ class LocalStorage {
     return phoneNumber.toString();
   }
 
+  /// get email from local storage
   Future<String> get email async {
     //? get token from local storage
     log('get email');
@@ -139,6 +142,7 @@ class LocalStorage {
     return email.toString();
   }
 
+  /// get token from local storage
   Future<String> get token async {
     //? get token from local storage
     log('get token');
@@ -146,6 +150,7 @@ class LocalStorage {
     return token.toString();
   }
 
+  /// get isCompleteInfo from local storage
   Future<bool?> get isCompleteInfo async {
     //? get isCompleteInfo from local storage
 
@@ -162,6 +167,7 @@ class LocalStorage {
     return null;
   }
 
+  /// get userId from local storage
   Future<String> get userId async {
     //? get userId from local storage
     log('get userId');
@@ -174,6 +180,7 @@ class LocalStorage {
     return userId.toString();
   }
 
+  /// get expiryDate from local storage
   Future<String> get expiryDate async {
     //? get expiryDate from local storage
 
@@ -184,6 +191,7 @@ class LocalStorage {
   }
 }
 
+/// Variables Name
 enum VarName {
   token,
   userId,

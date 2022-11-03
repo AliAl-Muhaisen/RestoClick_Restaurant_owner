@@ -1,28 +1,24 @@
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
-
 import '../translations/locale_keys.dart';
 
 class Verify {
+  ///*? info
+  ///*? void = - and get = + setAndGet =
+  ///*# Functions
+  ///*$ + isPrice
+  ///*$ + isImage
+  ///*$ + isAddress
+  ///*$ + isRestaurantName
+  ///*$ + isEMail
+  ///*$ + isPassword
+  ///*$ + isPhoneNumber
+  ///*$ + isUserName
 
-  // ignore: slash_for_doc_comments
-  /**
-  *? info
-  *? void = - and get = + setAndGet =
-  *# Functions
-  *$ + isPrice
-  *$ + isImage
-  *$ + isAddress
-  *$ + isRestaurantName
-  *$ + isEMail
-  *$ + isPassword
-  *$ + isPhoneNumber
-  *$ + isUserName
-  *$ + 
-  */
   static final Verify _verify = Verify._internal();
+
+  /// To validate the input
   factory Verify() {
     return _verify;
   }
@@ -40,6 +36,7 @@ class Verify {
     '9',
   ];
 
+  /// To validate the Price
   String? isPrice({String? price}) {
     var digits = price!.trim().split('');
     if (digits.isEmpty || digits.length > 5) {
@@ -54,6 +51,7 @@ class Verify {
     return null;
   }
 
+  /// To validate the Image
   String? isImage(File? file) {
     if (file == null) {
       return "Uploaded file is not a valid image";
@@ -61,6 +59,7 @@ class Verify {
     return null;
   }
 
+  /// To validate the Address
   String? isAddress(String? address) {
     if (address!.length < 3 || address.isEmpty) {
       return "invalid address";
@@ -68,6 +67,7 @@ class Verify {
     return null;
   }
 
+  /// To validate the Restaurant Name
   String? isRestaurantName(String? restaurantName) {
     if (restaurantName!.length < 3 || restaurantName.isEmpty) {
       return "invalid name";
@@ -75,6 +75,7 @@ class Verify {
     return null;
   }
 
+  /// To validate the EMail
   String? isEMail(String? email) {
     // to check if the email address valid or not
     email = email!.trim();
@@ -86,6 +87,7 @@ class Verify {
     return null;
   }
 
+  /// To validate the Password
   String? isPassword(String? password) {
     if (password!.length < 8) {
       return LocaleKeys.inputForm_password_errorMessage_short.tr();
@@ -99,6 +101,7 @@ class Verify {
     // return false;
   }
 
+  /// To validate the Phone Number
   String? isPhoneNumber(String? phoneNumber) {
     List<String> validInputs = [
       '+',
@@ -120,6 +123,7 @@ class Verify {
     return null;
   }
 
+  /// To validate the User Name
   String? isUserName(String? name) {
     if (!RegExp(r"^[a-zA-Z\d._-]{3,20}").hasMatch(name!)) {
       return LocaleKeys.inputForm_userName_errorMessage_invalid.tr();

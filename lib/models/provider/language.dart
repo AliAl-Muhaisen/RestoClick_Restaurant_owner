@@ -3,13 +3,14 @@
 // import 'package:flutter/cupertino.dart';
 // import 'package:flutter/material.dart';
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class Language with ChangeNotifier {
-  // static Language? _language = null;
-  // final String id;
+  /// Class Variables
   final String flag;
   final String languageCode;
   final String name;
@@ -23,19 +24,19 @@ class Language with ChangeNotifier {
     String languageCode,
     BuildContext context,
   ) async {
-    print('from function change ${context.locale.toString()}');
+    log('from function change ${context.locale.toString()}');
     if (cl) {
-      print('arabic + ${context.locale.toString()}');
-      await context.setLocale(Locale('ar'));
+      log('arabic + ${context.locale.toString()}');
+      await context.setLocale(const Locale('ar'));
     } else {
-      print('english + ${context.locale.toString()}');
-  
-      await context.setLocale(Locale('en'));
+      log('english + ${context.locale.toString()}');
+
+      await context.setLocale(const Locale('en'));
     }
     cl = !cl;
 
     // notifyListeners();
-    print('from function change ${context.locale.toString()} 2');
+    log('from function change ${context.locale.toString()} 2');
   }
 
   final supportedLocales = const [
@@ -55,10 +56,4 @@ class Language with ChangeNotifier {
       languageCode: 'en',
     ),
   ];
-  void a() {
-    
-    notifyListeners();
-  }
- 
 }
-
