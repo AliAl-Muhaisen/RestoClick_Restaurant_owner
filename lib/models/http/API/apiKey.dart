@@ -56,6 +56,15 @@ class Apikey with ChangeNotifier {
     return url.toString();
   }
 
+  /// To get the restaurant's competitors
+  Future<String> get restaurants async {
+    final token = await LocalStorage().token;
+    String url = getAPIbyKey('DataBase').toString() +
+        "restaurantUsers.json?auth=" +
+        token.toString();
+    return url.toString();
+  }
+
   Future<String> updateAndDeleteMenuMeal(String mealId) async {
     /// To update or Delete [Menu] or [Meal] from the database
 
@@ -66,4 +75,15 @@ class Apikey with ChangeNotifier {
         token.toString();
     return url.toString();
   }
+
+   Future<String> getMenuResCompetitor(String restaurantId) async {
+    /// To get [menu] information and [meals] from the database
+
+    final token = await LocalStorage().token;
+    String url = getAPIbyKey('DataBase').toString() +
+        "restaurantMenu/$restaurantId.json?auth=" +
+        token.toString();
+    return url.toString();
+  }
+
 }

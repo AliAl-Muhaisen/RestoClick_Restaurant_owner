@@ -21,7 +21,7 @@ class Category {
   final List<String> _restaurantCategories = [
     "Restaurant",
     "Coffee House",
-    "Farm"
+    // "Farm"
   ];
   final List<String> _mealCategories = [
     'Arabic Food'
@@ -33,6 +33,7 @@ class Category {
     'French',
     'SeaFood',
   ];
+
   /// places category
   List<String> get restaurantCategories {
     return [..._restaurantCategories];

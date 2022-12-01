@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_owner_app/models/http/firebaseStorage.dart';
 import 'package:restaurant_owner_app/models/provider/restaurant/restaurantMenu.dart';
 import 'package:restaurant_owner_app/models/provider/restaurant/meal.dart';
 import 'package:restaurant_owner_app/models/screen.dart';
@@ -46,12 +45,11 @@ class _MenuPageState extends State<MenuPage> {
                     Provider.of<RestaurantMenu>(context, listen: false).menu,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return  Center(child: spinKitLoading());
+                    return Center(child: spinKitLoading());
                   } else if (snapshot.connectionState == ConnectionState.done) {
                     return Flexible(
                       child: Consumer<RestaurantMenu>(
                         builder: (context, menuData, _) {
-                          log("length ${menuData.restaurantMenu.length}");
                           if (menuData.restaurantMenu.isEmpty) {
                             return const Center(
                               child: Text(
@@ -151,7 +149,7 @@ class MealMenuItem extends StatelessWidget {
           vertical: 4,
         ),
         elevation: 20,
-        color:cardMealItem,
+        color: cardMealItem,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
           child: ListTile(

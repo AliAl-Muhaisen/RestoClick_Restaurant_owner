@@ -1,4 +1,5 @@
 import '../screens/auth/confirmInfo.dart';
+import '../screens/restaurant/competitorRestaurantDetail.dart';
 import '../screens/restaurant/menuPage.dart';
 import '../screens/restaurant/addMealPage.dart';
 import 'package:restaurant_owner_app/screens/test.dart';
@@ -41,6 +42,7 @@ class Screen {
     MealPage.routeName: (context) => const MealPage(),
     MenuPage.routeName: (context) => MenuPage(),
     FloatingNavbar.routeName: (context) => const FloatingNavbar(),
+    CompetitorRestaurantDetail.routeName: (context) => CompetitorRestaurantDetail(),
 
     // AccountSettingPage.routeName: (context) => AccountSettingPage(),
     // EditAccount.routeName: (context) => EditAccount()
@@ -58,6 +60,12 @@ class Screen {
     BuildContext context,
   ) {
     Navigator.of(context).pop();
+  }
+
+  void pushNamedWithData(BuildContext context, page, data) {
+    print('push with name with data');
+
+    Navigator.of(context).pushNamed(page, arguments: data);
   }
 
   void navigatorPush(BuildContext context, page) {

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 import 'http/API/apiKey.dart';
 import 'http/firebaseStorage.dart';
+import 'provider/restaurant/meal.dart';
 
 class Restaurant {
   // ignore: slash_for_doc_comments
@@ -29,6 +30,18 @@ class Restaurant {
   String? _type;
   Restaurant();
 
+  String? _id;
+  String? _imageProfileUrl;
+  Restaurant.fromJson(
+      Map<String, dynamic> restaurantData, String? restaurantId) {
+    final resInfo = restaurantData["restaurantInfo"] as Map;
+    _imageProfileUrl = restaurantData['imageUrl'];
+    _address = resInfo['address'];
+    _restaurantName = resInfo['name'];
+    _type = resInfo['type'];
+    _id = restaurantId;
+  }
+
   /// To get restaurant address
   String? get address => _address;
 
@@ -46,6 +59,12 @@ class Restaurant {
 
   /// To get restaurant commercialRegistry
   File? get commercialRegistry => _commercialRegistry;
+
+  /// To get restaurant ID
+  String get id => _id!;
+
+  /// To get restaurant imageProfileUrl
+  String get imageProfileUrl => _imageProfileUrl!;
 
   /// Set restaurant address
   void setAddress(String address) {
@@ -117,4 +136,52 @@ class Restaurant {
       log(error.toString());
     }
   }
+
+  /// To get restaurants from database
+  static Future<List<Restaurant>> getRestaurants() async {
+    List<Restaurant> restaurants = [];
+
+    final api = await Apikey().restaurants;
+    final url = Uri.parse(api.toString());
+    try {
+      http.Response response = await http.get(url);
+      if (response.statusCode == 200) {}
+      final data = await json.decode(response.body);
+      data.forEach((key, value) {
+        Restaurant newRes = Restaurant.fromJson(value, key);
+        restaurants.add(newRes);
+      });
+    } catch (error) {
+      log("something went wrong models->restaurant->getRestaurants");
+      log(error.toString());
+    }
+
+    return restaurants;
+  }
+
+   /// To get the restaurant menu
+  Future<List<Meal>?> get menu async {
+    Map<String, dynamic> menuData = {};
+    List<Meal> menu = [];
+    try {
+      final api = await Apikey().getMenuResCompetitor(id); //# Restaurant ID
+      final url = Uri.parse(api.toString());
+
+      //# Fetch data from the server
+      http.Response response = await http.get(url);
+
+      menuData = await json.decode(response.body);
+
+      //# To convert json data to list of meals
+      menuData.forEach((key, value) => menu.add(Meal.fromJson(value, key)));
+    } catch (error) {
+      //! Connection error or NULL response
+      log("something went wrong models-> restaurants file-> get menu");
+      log(error.toString());
+      return [];
+    }
+
+    return menu;
+  }
+
 }
