@@ -65,25 +65,22 @@ class Apikey with ChangeNotifier {
     return url.toString();
   }
 
+  /// To update or Delete [Menu] or [Meal] from the database
   Future<String> updateAndDeleteMenuMeal(String mealId) async {
-    /// To update or Delete [Menu] or [Meal] from the database
-
     final token = await LocalStorage().token;
     final userId = await LocalStorage().userId;
     String url = getAPIbyKey('DataBase').toString() +
-        "restaurantMenu/$userId/$mealId.json?auth=" +
+        "restaurantMenu/${userId.toString()}/${mealId.toString()}.json?auth=" +
         token.toString();
     return url.toString();
   }
 
-   Future<String> getMenuResCompetitor(String restaurantId) async {
-    /// To get [menu] information and [meals] from the database
-
+  /// To get [menu] information and [meals] from the database for competitors
+  Future<String> getMenuResCompetitor(String restaurantId) async {
     final token = await LocalStorage().token;
     String url = getAPIbyKey('DataBase').toString() +
         "restaurantMenu/$restaurantId.json?auth=" +
         token.toString();
     return url.toString();
   }
-
 }

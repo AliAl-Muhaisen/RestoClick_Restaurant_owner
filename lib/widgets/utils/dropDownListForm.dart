@@ -12,14 +12,16 @@ class DropDownListForm extends StatefulWidget {
   String errorMessage;
   Color buttonColor;
   double paddingButtonHorizontal;
+  bool useValidation;
   DropDownListForm({
     Key? key,
     required this.onSave,
     required this.listItem,
     required this.title,
     required this.errorMessage,
-    this.buttonColor=cardBackground,
-     this.paddingButtonHorizontal=20,
+    this.buttonColor = cardBackground,
+    this.paddingButtonHorizontal = 20,
+    this.useValidation = true,
   }) : super(key: key);
 
   @override
@@ -66,10 +68,9 @@ class _DropDownListFormState extends State<DropDownListForm> {
               child: Text(
                 widget.title,
                 style: const TextStyle(
-                  fontSize: 16,
-                  color: Color.fromARGB(255, 32, 32, 32),
-                  fontWeight: FontWeight.w400
-                ),
+                    fontSize: 16,
+                    color: Color.fromARGB(255, 32, 32, 32),
+                    fontWeight: FontWeight.w400),
               ),
             ),
             icon: const Icon(
@@ -96,6 +97,10 @@ class _DropDownListFormState extends State<DropDownListForm> {
                     ))
                 .toList(),
             validator: (value) {
+              if (!widget.useValidation) {
+                return null;
+              }
+
               if (value == null) {
                 return widget.errorMessage;
               }

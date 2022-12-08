@@ -91,15 +91,17 @@ class CardSetting extends StatelessWidget {
 
 class CardMealMenu extends StatefulWidget {
   Function(bool) onPressed;
- 
-  String text;
 
+  String text;
+  bool toggle;
   CardMealMenu({
     Key? key,
     required this.onPressed,
     // required this.icon,
     required this.text,
     // this.tailIcon=Icons.arrow_forward_ios
+
+    this.toggle = false,
   }) : super(key: key);
 
   @override
@@ -107,8 +109,6 @@ class CardMealMenu extends StatefulWidget {
 }
 
 class _CardMealMenuState extends State<CardMealMenu> {
-  bool toggle = false;
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -123,12 +123,11 @@ class _CardMealMenuState extends State<CardMealMenu> {
         ),
         onPressed: () {
           setState(() {
-            toggle = !toggle;
+            widget.toggle = !widget.toggle;
           });
         },
         child: Row(
           children: [
-           
             AddHorizontalSpace(20),
             Expanded(
               child: Text(
@@ -138,7 +137,7 @@ class _CardMealMenuState extends State<CardMealMenu> {
             ),
             //  Icon(tailIcon),
             CupertinoSwitch(
-              value: toggle,
+              value: widget.toggle,
               thumbColor: CupertinoColors.systemBlue,
               trackColor: CupertinoColors.systemRed.withOpacity(0.14),
               activeColor: CupertinoColors.systemRed.withOpacity(0.64),
@@ -146,7 +145,7 @@ class _CardMealMenuState extends State<CardMealMenu> {
                 // This is called when the user toggles the switch.
                 widget.onPressed(value!);
                 setState(() {
-                  toggle = value;
+                  widget.toggle = value;
                 });
               },
             ),

@@ -44,8 +44,6 @@ class Screen {
     FloatingNavbar.routeName: (context) => const FloatingNavbar(),
     CompetitorRestaurantDetail.routeName: (context) => CompetitorRestaurantDetail(),
 
-    // AccountSettingPage.routeName: (context) => AccountSettingPage(),
-    // EditAccount.routeName: (context) => EditAccount()
   };
 
   void pushNamed(BuildContext context, pageName) {

@@ -19,7 +19,8 @@ import '../../widgets/utils/floatingNavbar.dart';
 
 class MealPage extends StatefulWidget {
   static const routeName = '/MenuMeal';
-  const MealPage({Key? key}) : super(key: key);
+  final Meal? oldMeal;
+  const MealPage({Key? key, this.oldMeal}) : super(key: key);
 
   @override
   State<MealPage> createState() => _MealPageState();
@@ -29,12 +30,18 @@ class _MealPageState extends State<MealPage> {
   InputFormField? mealTitle;
   InputFormField? mealPrice;
   Meal meal = Meal();
+  bool isOldMeal = false;
   File? mealImage;
   CardSetting? mealImageCard;
   bool _isLoading = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
+    isOldMeal = widget.oldMeal == null ? false : true;
+    if (isOldMeal) {
+      log(widget.oldMeal!.categories.toString());
+      meal.setCategories(widget.oldMeal!.categories);
+    }
     mealPrice = InputFormField(
       inputIcon: Icons.money_off,
       keyBoardType: TextInputType.number,
@@ -44,6 +51,7 @@ class _MealPageState extends State<MealPage> {
       focusedBorderRadius: 12,
       validator: (value) => Verify().isPrice(price: value),
       onSaved: (String value) => meal.setPrice(value),
+      initialValue: isOldMeal ? widget.oldMeal!.price : "",
     );
     mealTitle = InputFormField(
       inputIcon: Icons.restaurant_menu,
@@ -54,7 +62,9 @@ class _MealPageState extends State<MealPage> {
       focusedBorderRadius: 12,
       validator: (value) => Verify().isRestaurantName(value),
       onSaved: (String value) => meal.setTitle(value),
+      initialValue: isOldMeal ? widget.oldMeal?.title : "",
     );
+
     mealImageCard = CardSetting(
       tailIcon: Icons.upload_rounded,
       icon: Icons.image_search_rounded,
@@ -73,23 +83,37 @@ class _MealPageState extends State<MealPage> {
   }
 
   Future<void> _submit() async {
-    if (!_formKey.currentState!.validate() || meal.imageFile == null) {
+    if (!_formKey.currentState!.validate() ||
+        (meal.imageFile == null && !isOldMeal)) {
       log('invalid inputs');
       //! Invalid!
       return;
     }
+
     _formKey.currentState!.save();
     setState(() {
       _isLoading = true;
     });
     try {
-      log('try');
-      meal.uploadToDataBase();
+      if (isOldMeal) {
+        if (meal.categories.isEmpty) {
+          log("NULLLLLLLLLLLLLLLL");
+        }
+        log(meal.categories);
+        meal.setId(widget.oldMeal!.id);
+        await meal.update();
+      } else {
+        await meal.uploadToDataBase();
+      }
+
       // Screen().pop(context);
 
-      showHttpDialog('great job',
-          'Your meal has been added to the menu correctly', 'okay', context);
-      Screen().pushReplacementNamed(context, FloatingNavbar.routeName);
+      showHttpDialog(
+          'great job',
+          'Your meal has been ${isOldMeal ? "updated" : "added"} to the menu correctly',
+          'okay',
+          context);
+      // Screen().pushReplacementNamed(context, FloatingNavbar.routeName);
     } catch (error) {
       log('error');
       log(error.toString());
@@ -106,14 +130,6 @@ class _MealPageState extends State<MealPage> {
     });
   }
 
-  final List<String> genderItems = [
-    'Male',
-    'Female',
-  ];
-
-  // String? selectedValue;
-  // List<String> selectedCategories = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,8 +140,6 @@ class _MealPageState extends State<MealPage> {
             key: _formKey,
             child: Center(
               child: Column(
-                // textDirection: TextDirection.,
-
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -139,8 +153,11 @@ class _MealPageState extends State<MealPage> {
                     child: mealPrice!,
                   ),
                   DropDownListForm(
-                    title: "Select meal's type",
-                    errorMessage: "Please select meal's type",
+                    title: isOldMeal
+                        ? widget.oldMeal!.categories
+                        : "Select meal's type",
+                    errorMessage: isOldMeal ? "" : "Please select meal's type",
+                    useValidation: isOldMeal ? false : true,
                     listItem: Category().mealCategories,
                     onSave: (String value) => meal.setCategories(value),
                   ),
@@ -149,19 +166,35 @@ class _MealPageState extends State<MealPage> {
                       meal.setIsGlutenFree(value);
                     },
                     text: 'Gluten Free',
+                    toggle: isOldMeal ? widget.oldMeal!.isGlutenFree! : false,
                   ),
                   mealImageCard!,
-                  if (meal.imageFile == null)
+                  if (meal.imageFile == null &&
+                      widget.oldMeal?.imageUrl == null)
                     const Text('no image selected')
                   else
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15),
-                      child: Image.file(
-                        meal.imageFile!,
-                        width: 300,
-                        height: 300,
-                        fit: BoxFit.cover,
-                      ),
+                      child: isOldMeal
+                          ? (meal.imageFile == null
+                              ? Image.network(
+                                  widget.oldMeal!.imageUrl,
+                                  width: 300,
+                                  height: 300,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.file(
+                                  meal.imageFile!,
+                                  width: 300,
+                                  height: 300,
+                                  fit: BoxFit.cover,
+                                ))
+                          : Image.file(
+                              meal.imageFile!,
+                              width: 300,
+                              height: 300,
+                              fit: BoxFit.cover,
+                            ),
                     ),
                   AddVerticalSpace(20),
                   if (_isLoading)
@@ -172,7 +205,7 @@ class _MealPageState extends State<MealPage> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: _submit,
-                        child: const Text("continue"),
+                        child: Text(isOldMeal ? "Update" : "Add"),
                       ),
                     ),
                   AddVerticalSpace(100),

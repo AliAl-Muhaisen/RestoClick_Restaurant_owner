@@ -65,9 +65,24 @@ class Meal with ChangeNotifier {
 
   String get imageUrl => _imageUrl!; //! just for build constructor only
   String get id => _id!; //! just for build constructor only
+  
+  
   String get categories {
     return _categories!;
   }
+
+  /// You should use this method if you want to update the product
+  void setId(String id)
+  {
+    _id = id;
+  }
+
+  /// You should use this method if you want to update the product
+  void setImageUrl(String imageUrl){
+    _imageUrl = imageUrl;
+  }
+
+  
 
   void setCategories(String categoriesList) {
     _categories = categoriesList;
@@ -153,6 +168,37 @@ class Meal with ChangeNotifier {
     } catch (error) {
       log('something went wrong RestaurantMenu file , function uploadToDataBase \nError');
       log(error.toString());
+    }
+  }
+
+  Future<void> update() async {
+    try {
+      String api = await Apikey().updateAndDeleteMenuMeal(id);
+      Uri url = Uri.parse(api.toString());
+
+// if()
+      log(title.toString());
+      log(id.toString());
+      log(isGlutenFree.toString());
+      log(categories.toString());
+      log(price.toString());
+      log(imageUrl.toString());
+      
+      http.Response response = await http.patch(
+        url,
+        body: json.encode({
+          "title": title!,
+          "isGlutenFree": isGlutenFree!,
+          "isVegetarian": isVegetarian!,
+          "categories": categories,
+          "price": price!,
+          "imageUrl": imageUrl,
+        }),
+      );
+      log(response.toString());
+    } catch (e) {
+      log('something went wrong RestaurantMenu file , update function \nError');
+      log(e.toString());
     }
   }
 

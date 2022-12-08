@@ -31,7 +31,9 @@ void showHttpDialog(
         TextButton(
           child: Text(buttonText),
           onPressed: () {
-            Navigator.of(ctx).pop();
+            log("message");
+            Screen().pop(context);
+            // Navigator.of(ctx).pop();
           },
         )
       ],
