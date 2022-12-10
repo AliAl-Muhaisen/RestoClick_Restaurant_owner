@@ -13,6 +13,7 @@ class DropDownListForm extends StatefulWidget {
   Color buttonColor;
   double paddingButtonHorizontal;
   bool useValidation;
+  String previousValue;
   DropDownListForm({
     Key? key,
     required this.onSave,
@@ -22,6 +23,7 @@ class DropDownListForm extends StatefulWidget {
     this.buttonColor = cardBackground,
     this.paddingButtonHorizontal = 20,
     this.useValidation = true,
+    this.previousValue = "",
   }) : super(key: key);
 
   @override
@@ -85,6 +87,7 @@ class _DropDownListFormState extends State<DropDownListForm> {
               color: const Color.fromARGB(255, 253, 250, 250),
               borderRadius: BorderRadius.circular(15),
             ),
+            // value:  widget.listItem[0],
             items: widget.listItem
                 .map((item) => DropdownMenuItem<String>(
                       value: item,
@@ -107,6 +110,12 @@ class _DropDownListFormState extends State<DropDownListForm> {
             },
             onChanged: (value) {},
             onSaved: (value) {
+              if (value == null) {
+                if (widget.listItem.contains(widget.previousValue)) {
+                  widget.onSave(widget.previousValue);
+                  return;
+                }
+              }
               widget.onSave(value.toString());
             },
           ),

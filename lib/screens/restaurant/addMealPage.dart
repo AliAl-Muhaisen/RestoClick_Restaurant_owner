@@ -39,8 +39,7 @@ class _MealPageState extends State<MealPage> {
   void initState() {
     isOldMeal = widget.oldMeal == null ? false : true;
     if (isOldMeal) {
-      log(widget.oldMeal!.categories.toString());
-      meal.setCategories(widget.oldMeal!.categories);
+      meal = widget.oldMeal!;
     }
     mealPrice = InputFormField(
       inputIcon: Icons.money_off,
@@ -96,10 +95,6 @@ class _MealPageState extends State<MealPage> {
     });
     try {
       if (isOldMeal) {
-        if (meal.categories.isEmpty) {
-          log("NULLLLLLLLLLLLLLLL");
-        }
-        log(meal.categories);
         meal.setId(widget.oldMeal!.id);
         await meal.update();
       } else {
@@ -159,6 +154,7 @@ class _MealPageState extends State<MealPage> {
                     errorMessage: isOldMeal ? "" : "Please select meal's type",
                     useValidation: isOldMeal ? false : true,
                     listItem: Category().mealCategories,
+                    previousValue: isOldMeal ? meal.categories:"",
                     onSave: (String value) => meal.setCategories(value),
                   ),
                   CardMealMenu(

@@ -12,6 +12,7 @@ import 'package:restaurant_owner_app/widgets/utils/addSpace.dart';
 
 import '../../themes/stander/colors.dart';
 import '../../widgets/loadingSpin.dart';
+import '../../widgets/ui/menuCardItem.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({Key? key}) : super(key: key);
@@ -74,6 +75,7 @@ class _MenuPageState extends State<MenuPage> {
                               ),
                             ),
                           );
+
                         },
                       ),
                     );
@@ -81,6 +83,7 @@ class _MenuPageState extends State<MenuPage> {
                   return const Center(child: Text("Error"));
                 },
               ),
+              const SizedBox(height: 95,)
             ],
           ),
         ),
@@ -142,8 +145,16 @@ class MealMenuItem extends StatelessWidget {
       onDismissed: (direction) {
         meal.deleteMeal(meal.id);
       },
-      child: CardMenuItem(
+      child: MenuCardItem(
         meal: meal,
+        borderRadius: 12,
+        elevation: 5,
+        imageBorderRadius: 15,
+        marginHorizontal: 15,
+        marginVertical: 4,
+        paddingHorizontal: 8,
+        paddingVertical: 10,
+        key: Key(meal.id),
         onTap: () {
           Screen().navigatorPush(
               context,
@@ -156,74 +167,3 @@ class MealMenuItem extends StatelessWidget {
   }
 }
 
-class CardMenuItem extends StatelessWidget {
-  final Meal meal;
-  double borderRadius;
-  // padding
-  double paddingVertical;
-  double paddingHorizontal;
-
-  double marginVertical;
-  double marginHorizontal;
-  double elevation;
-  void Function()? onTap;
-  double imageBorderRadius;
-  CardMenuItem({
-    Key? key,
-    required this.meal,
-    this.borderRadius = 12,
-    this.paddingVertical = 8,
-    this.paddingHorizontal = 10,
-    this.marginVertical = 4,
-    this.marginHorizontal = 15,
-    this.elevation = 20,
-    this.onTap,
-    this.imageBorderRadius = 12,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(borderRadius), // <-- Radius
-      ),
-      margin: EdgeInsets.symmetric(
-        horizontal: marginHorizontal,
-        vertical: marginVertical,
-      ),
-      elevation: elevation,
-      color: cardMealItem,
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal: paddingHorizontal, vertical: paddingVertical),
-        child: ListTile(
-          onTap: () {
-            if (onTap != null) {
-              try {
-                onTap!();
-              } catch (e) {}
-            }
-          },
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          trailing: Text(
-            "\$${meal.price}",
-            style: const TextStyle(
-              color: Colors.blue,
-              fontSize: 20,
-            ),
-          ),
-          leading: ClipRRect(
-            child: Image.network(
-              meal.imageUrl,
-              fit: BoxFit.cover,
-            ),
-            borderRadius: BorderRadius.circular(imageBorderRadius),
-          ),
-          title: Text(meal.title!),
-          subtitle: Text(meal.categories),
-        ),
-      ),
-    );
-  }
-}

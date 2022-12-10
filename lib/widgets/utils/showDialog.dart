@@ -19,7 +19,7 @@ void showHttpDialog(
 ) {
   showDialog(
     context: context,
-    builder: (ctx) => AlertDialog(
+    builder: (context) => AlertDialog(
       elevation: 5,
       scrollable: true,
       shape: RoundedRectangleBorder(
@@ -31,9 +31,9 @@ void showHttpDialog(
         TextButton(
           child: Text(buttonText),
           onPressed: () {
-            log("message");
             Screen().pop(context);
-            // Navigator.of(ctx).pop();
+
+            Navigator.of(context).pop();
           },
         )
       ],
