@@ -27,9 +27,10 @@ class User {
   User.fromJsonWithCustom(
     Map<String, dynamic> json,
   ) {
-    _name = json['name'];
+    _name = json['userName'];
     _email = json['email'];
     _password = json['password'];
+    _phoneNumber = json['phoneNumber'];
   }
 
   /// To set user Email

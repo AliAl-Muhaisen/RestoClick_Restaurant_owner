@@ -107,10 +107,13 @@ class Apikey with ChangeNotifier {
     return url.toString();
   }
 
-  Future<String> getUserReservation({required String reservedId, required String userId}) async {
+  Future<String> getUserReservation({
+    String? reservedId,
+    required String userId,
+  }) async {
     final token = await LocalStorage().token;
     String url = getAPIbyKey('DataBase').toString() +
-        "users/${userId.toString()}/reservationsId/$reservedId.json?auth=" +
+        "users/${userId.toString()}${reservedId?.isNotEmpty ?? false ? "/reservationsId/$reservedId" : ''}.json?auth=" +
         token.toString();
 
     return url.toString();

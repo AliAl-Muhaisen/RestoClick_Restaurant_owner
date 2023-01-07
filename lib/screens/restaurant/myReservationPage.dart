@@ -1,22 +1,16 @@
-import 'dart:developer';
-
-// import 'package:customer_app/screens/restaurant/reservationPage.dart';
-
-import '../../models/reservation.dart';
 import 'package:flutter/material.dart';
-// import '../../models/restaurantReserveFacade.dart';
-import '../../models/screen.dart';
+
 import '../../widgets/loadingSpin.dart';
 import '../../widgets/utils/addSpace.dart';
-// import 'restaurantMenu.dart';
 import '../../widgets/utils/showDialog.dart';
+import '../../models/userReserveFacade.dart';
 
 class MyReservationPage extends StatelessWidget {
   static String routeName = "/myReservationPage";
 
   const MyReservationPage({Key? key}) : super(key: key);
-  Future<List<Reservation>> get reserveWithRestaurant async {
-    List<Reservation> result = await Reservation.restaurantReservations;
+  Future<List<UserReserveFacade>> get reserveWithRestaurant async {
+    List<UserReserveFacade> result = await UserReserveFacade.reserveWithUser;
     return result;
   }
 
@@ -43,8 +37,8 @@ class MyReservationPage extends StatelessWidget {
                       return Center(child: spinKitLoading());
                     }
                     if (snapshot.connectionState == ConnectionState.done) {
-                      List<Reservation> result =
-                          snapshot.data as List<Reservation>;
+                      List<UserReserveFacade> result =
+                          snapshot.data as List<UserReserveFacade>;
                       if (!snapshot.hasData || result.isEmpty) {
                         return const Center(
                           child: Padding(
@@ -68,7 +62,7 @@ class MyReservationPage extends StatelessWidget {
                             itemBuilder: (context, index) {
                               return SingleChildScrollView(
                                 child: ReservationItem(
-                                    restaurantReserveFacade: result[index]),
+                                    userReserveFacade: result[index]),
                               );
                             }),
                       );
@@ -88,16 +82,16 @@ class MyReservationPage extends StatelessWidget {
 }
 
 class ReservationItem extends StatelessWidget {
-  final Reservation restaurantReserveFacade;
+  final UserReserveFacade userReserveFacade;
   const ReservationItem({
     Key? key,
-    required this.restaurantReserveFacade,
+    required this.userReserveFacade,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      key: ValueKey(restaurantReserveFacade.id),
+      key: ValueKey(userReserveFacade.id),
       background: Container(
         color: Theme.of(context).errorColor,
         child: const Icon(
@@ -139,10 +133,10 @@ class ReservationItem extends StatelessWidget {
         );
       },
       onDismissed: (direction) {
-        restaurantReserveFacade.delete();
+        userReserveFacade.reserve.delete();
       },
       child: ReservationCardItem(
-        restaurantReserveFacade: restaurantReserveFacade,
+        userReserveFacade: userReserveFacade,
         borderRadius: 30,
         elevation: 5,
         imageBorderRadius: 100,
@@ -150,7 +144,7 @@ class ReservationItem extends StatelessWidget {
         marginVertical: 4,
         paddingHorizontal: 8,
         paddingVertical: 5,
-        key: Key(restaurantReserveFacade.id!),
+        key: Key(userReserveFacade.id),
         onTap: () {},
       ),
     );
@@ -158,7 +152,7 @@ class ReservationItem extends StatelessWidget {
 }
 
 class ReservationCardItem extends StatefulWidget {
-  final Reservation restaurantReserveFacade;
+  final UserReserveFacade userReserveFacade;
   double borderRadius;
   // padding
   double paddingVertical;
@@ -172,7 +166,7 @@ class ReservationCardItem extends StatefulWidget {
 
   ReservationCardItem({
     Key? key,
-    required this.restaurantReserveFacade,
+    required this.userReserveFacade,
     this.borderRadius = 5,
     this.paddingVertical = 2,
     this.paddingHorizontal = 2,
@@ -193,7 +187,7 @@ class _ReservationCardItemState extends State<ReservationCardItem> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      key: Key(widget.restaurantReserveFacade.id!),
+      key: Key(widget.userReserveFacade.id),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(widget.borderRadius), // <-- Radius
       ),
@@ -218,26 +212,34 @@ class _ReservationCardItemState extends State<ReservationCardItem> {
           trailing: SizedBox(
             width: 100,
             // height: 50,
-            child: (widget.restaurantReserveFacade.status == "accepted")
-                ? widget.restaurantReserveFacade.status == "accepted" &&
-                        widget.restaurantReserveFacade.date.isBefore(
-                          DateTime.now(),
+            child: (widget.userReserveFacade.reserve.status == "accepted")
+                ? widget.userReserveFacade.reserve.status == "accepted" &&
+                        widget.userReserveFacade.reserve.date.isBefore(
+                          DateTime.now().add(const Duration(hours: 1)),
                         )
                     ? Center(
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            return showHttpDialog(
+                              "Phone Number",
+                              widget.userReserveFacade.user.phoneNumber
+                                  .toString(),
+                              "Close",
+                              context,
+                            );
+                          },
                           icon: const Icon(
                             Icons.report,
                             color: Color.fromARGB(255, 228, 228, 37),
                           ),
                         ),
                       )
-                    : const Text('')
+                    : IconButton(onPressed: () {}, icon: const Icon(Icons.call))
                 : Row(
                     children: [
                       IconButton(
                         onPressed: () {
-                          widget.restaurantReserveFacade
+                          widget.userReserveFacade.reserve
                               .updateStatus(status: "accepted");
                           setState(() {});
                         },
@@ -248,7 +250,7 @@ class _ReservationCardItemState extends State<ReservationCardItem> {
                       ),
                       IconButton(
                         onPressed: () {
-                          widget.restaurantReserveFacade
+                          widget.userReserveFacade.reserve
                               .updateStatus(status: "rejected");
                           setState(() {});
                         },
@@ -257,7 +259,7 @@ class _ReservationCardItemState extends State<ReservationCardItem> {
                     ],
                   ),
           ),
-          leading: widget.restaurantReserveFacade.status == "waiting"
+          leading: widget.userReserveFacade.reserve.status == "waiting"
               ? const CircleAvatar(
                   backgroundColor: Color.fromARGB(255, 255, 255, 254),
                   child: Icon(
@@ -266,7 +268,7 @@ class _ReservationCardItemState extends State<ReservationCardItem> {
                     color: Color.fromARGB(255, 230, 192, 28),
                   ),
                 )
-              : widget.restaurantReserveFacade.status == "rejected"
+              : widget.userReserveFacade.reserve.status == "rejected"
                   ? const CircleAvatar(
                       backgroundColor: Color.fromARGB(255, 255, 255, 255),
                       child: Icon(
@@ -285,13 +287,13 @@ class _ReservationCardItemState extends State<ReservationCardItem> {
                     ),
           title: Row(
             children: [
-              Text(widget.restaurantReserveFacade.numOfPeople.toString()),
+              Text(widget.userReserveFacade.user.name.toString()),
               AddHorizontalSpace(10),
               Row(
                 children: [
                   const Icon(Icons.person),
                   Text(
-                    "${widget.restaurantReserveFacade.numOfPeople}",
+                    "${widget.userReserveFacade.reserve.numOfPeople}",
                     style: const TextStyle(
                       color: Color.fromARGB(255, 32, 33, 34),
                       fontSize: 20,
@@ -301,9 +303,9 @@ class _ReservationCardItemState extends State<ReservationCardItem> {
               )
             ],
           ),
-          subtitle: Text(widget.restaurantReserveFacade.dateAsString +
+          subtitle: Text(widget.userReserveFacade.reserve.dateAsString +
               " " +
-              widget.restaurantReserveFacade.hour.toString()),
+              widget.userReserveFacade.reserve.hour.toString()),
         ),
       ),
     );
