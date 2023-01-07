@@ -76,7 +76,7 @@ class Apikey with ChangeNotifier {
     return url.toString();
   }
 
-   Future<String> getMenuResCompetitor(String restaurantId) async {
+  Future<String> getMenuResCompetitor(String restaurantId) async {
     /// To get [menu] information and [meals] from the database
 
     final token = await LocalStorage().token;
@@ -86,4 +86,33 @@ class Apikey with ChangeNotifier {
     return url.toString();
   }
 
+  Future<String> reservation({String? reservedId}) async {
+    /// To get [reserve] information from the database
+
+    final token = await LocalStorage().token;
+    String url = getAPIbyKey('DataBase').toString() +
+        "reservations${(reservedId?.isNotEmpty ?? false) ? "/$reservedId" : ''}.json?auth=" +
+        token.toString();
+    return url.toString();
+  }
+
+  Future<String> getRestaurantReservations({String? reservedId}) async {
+    final token = await LocalStorage().token;
+    final userId = await LocalStorage().userId;
+
+    String url = getAPIbyKey('DataBase').toString() +
+        "restaurantUsers/$userId/reservationsId${(reservedId?.isNotEmpty ?? false) ? "/$reservedId" : ''}.json?auth=" +
+        token.toString();
+
+    return url.toString();
+  }
+
+  Future<String> getUserReservation({required String reservedId, required String userId}) async {
+    final token = await LocalStorage().token;
+    String url = getAPIbyKey('DataBase').toString() +
+        "users/${userId.toString()}/reservationsId/$reservedId.json?auth=" +
+        token.toString();
+
+    return url.toString();
+  }
 }

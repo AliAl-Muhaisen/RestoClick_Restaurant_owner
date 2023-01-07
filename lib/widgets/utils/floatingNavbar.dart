@@ -8,6 +8,7 @@ import 'package:restaurant_owner_app/screens/homePage.dart';
 import 'package:restaurant_owner_app/themes/stander/colors.dart';
 import '../../models/localStorage.dart';
 import '../../screens/restaurant/menuPage.dart';
+import '../../screens/restaurant/myReservationPage.dart';
 
 class FloatingNavbar extends StatefulWidget {
   const FloatingNavbar({Key? key}) : super(key: key);
@@ -74,9 +75,8 @@ class _FloatingNavbarState extends State<FloatingNavbar> {
                 title: 'Menu'),
             FloatingNavBarItem(
                 iconData: Icons.archive_outlined,
-                page: ElevatedButton(
-                    child: const Text("Booking"), onPressed: () {}),
-                title: 'Settings'),
+                page: MyReservationPage(),
+                title: 'Booking'),
             FloatingNavBarItem(
                 iconData: Icons.settings,
                 page: ElevatedButton(

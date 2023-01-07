@@ -4,6 +4,7 @@ import '../screens/restaurant/menuPage.dart';
 import '../screens/restaurant/addMealPage.dart';
 import 'package:restaurant_owner_app/screens/test.dart';
 
+import '../screens/restaurant/myReservationPage.dart';
 import '../widgets/utils/floatingNavbar.dart';
 import '/screens/homePage.dart';
 import '/screens/mainPage.dart';
@@ -42,8 +43,9 @@ class Screen {
     MealPage.routeName: (context) => const MealPage(),
     MenuPage.routeName: (context) => MenuPage(),
     FloatingNavbar.routeName: (context) => const FloatingNavbar(),
-    CompetitorRestaurantDetail.routeName: (context) => CompetitorRestaurantDetail(),
-
+    CompetitorRestaurantDetail.routeName: (context) =>
+        CompetitorRestaurantDetail(),
+    MyReservationPage.routeName: (context) => MyReservationPage()
     // AccountSettingPage.routeName: (context) => AccountSettingPage(),
     // EditAccount.routeName: (context) => EditAccount()
   };

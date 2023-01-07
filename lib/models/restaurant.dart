@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 import 'http/API/apiKey.dart';
 import 'http/firebaseStorage.dart';
+import 'localStorage.dart';
 import 'provider/restaurant/meal.dart';
 
 class Restaurant {
@@ -140,6 +141,7 @@ class Restaurant {
   /// To get restaurants from database
   static Future<List<Restaurant>> getRestaurants() async {
     List<Restaurant> restaurants = [];
+    final userId = await LocalStorage().userId;
 
     final api = await Apikey().restaurants;
     final url = Uri.parse(api.toString());
@@ -148,8 +150,10 @@ class Restaurant {
       if (response.statusCode == 200) {}
       final data = await json.decode(response.body);
       data.forEach((key, value) {
-        Restaurant newRes = Restaurant.fromJson(value, key);
-        restaurants.add(newRes);
+        if (key != userId) {
+          Restaurant newRes = Restaurant.fromJson(value, key);
+          restaurants.add(newRes);
+        }
       });
     } catch (error) {
       log("something went wrong models->restaurant->getRestaurants");
@@ -159,7 +163,7 @@ class Restaurant {
     return restaurants;
   }
 
-   /// To get the restaurant menu
+  /// To get the restaurant menu
   Future<List<Meal>?> get menu async {
     Map<String, dynamic> menuData = {};
     List<Meal> menu = [];
@@ -183,5 +187,4 @@ class Restaurant {
 
     return menu;
   }
-
 }
