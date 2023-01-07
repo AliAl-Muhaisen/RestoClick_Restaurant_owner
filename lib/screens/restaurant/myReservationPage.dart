@@ -169,6 +169,8 @@ class ReservationCardItem extends StatelessWidget {
   double elevation;
   void Function()? onTap;
   double imageBorderRadius;
+
+  final dateNow = DateTime.now();
   ReservationCardItem({
     Key? key,
     required this.restaurantReserveFacade,
@@ -207,21 +209,29 @@ class ReservationCardItem extends StatelessWidget {
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           trailing: SizedBox(
-            width: 50,
-            height: 50,
+            width: 100,
+            // height: 50,
             child: (restaurantReserveFacade.status == "accepted" &&
-                    restaurantReserveFacade.date.isBefore(DateTime.now()))
+                    restaurantReserveFacade.date.isBefore(DateTime(
+                      dateNow.year,
+                      dateNow.month,
+                      dateNow.day + 1,
+                    )))
                 ? IconButton(
                     onPressed: () {}, icon: const Icon(Icons.add_comment))
                 : Row(
                     children: [
-                      const Icon(Icons.person),
-                      Text(
-                        "${restaurantReserveFacade.numOfPeople}",
-                        style: const TextStyle(
-                          color: Color.fromARGB(255, 32, 33, 34),
-                          fontSize: 20,
+                      IconButton(
+                        padding: EdgeInsets.all(1),
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.done,
+                          color: Colors.greenAccent,
                         ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.close, color: Colors.redAccent),
                       ),
                     ],
                   ),
@@ -252,7 +262,24 @@ class ReservationCardItem extends StatelessWidget {
                         color: Color.fromARGB(255, 113, 226, 37),
                       ),
                     ),
-          title: Text(restaurantReserveFacade.numOfPeople.toString()),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(restaurantReserveFacade.numOfPeople.toString()),
+              Row(
+                children: [
+                  const Icon(Icons.person),
+                  Text(
+                    "${restaurantReserveFacade.numOfPeople}",
+                    style: const TextStyle(
+                      color: Color.fromARGB(255, 32, 33, 34),
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
           subtitle: Text(restaurantReserveFacade.dateAsString +
               " " +
               restaurantReserveFacade.hour.toString()),
