@@ -133,11 +133,12 @@ class Reservation {
     }
   }
 
-  Future<void> update({required String status}) async {
+  Future<void> updateStatus({required String status}) async {
     try {
+      setStatus(status);
       String api = await Apikey().reservation(reservedId: id);
       Uri url = Uri.parse(api.toString());
-      await http.patch(
+      http.patch(
         url,
         body: json.encode({
           "status": status,

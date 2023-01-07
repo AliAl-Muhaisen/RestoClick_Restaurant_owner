@@ -157,7 +157,7 @@ class ReservationItem extends StatelessWidget {
   }
 }
 
-class ReservationCardItem extends StatelessWidget {
+class ReservationCardItem extends StatefulWidget {
   final Reservation restaurantReserveFacade;
   double borderRadius;
   // padding
@@ -170,7 +170,6 @@ class ReservationCardItem extends StatelessWidget {
   void Function()? onTap;
   double imageBorderRadius;
 
-  final dateNow = DateTime.now();
   ReservationCardItem({
     Key? key,
     required this.restaurantReserveFacade,
@@ -185,25 +184,33 @@ class ReservationCardItem extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<ReservationCardItem> createState() => _ReservationCardItemState();
+}
+
+class _ReservationCardItemState extends State<ReservationCardItem> {
+  final dateNow = DateTime.now();
+
+  @override
   Widget build(BuildContext context) {
     return Card(
-      key: Key(restaurantReserveFacade.id!),
+      key: Key(widget.restaurantReserveFacade.id!),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(borderRadius), // <-- Radius
+        borderRadius: BorderRadius.circular(widget.borderRadius), // <-- Radius
       ),
       margin: EdgeInsets.symmetric(
-        horizontal: marginHorizontal,
-        vertical: marginVertical,
+        horizontal: widget.marginHorizontal,
+        vertical: widget.marginVertical,
       ),
-      elevation: elevation,
+      elevation: widget.elevation,
       color: Color.fromARGB(251, 255, 255, 255),
       child: Padding(
         padding: EdgeInsets.symmetric(
-            horizontal: paddingHorizontal, vertical: paddingVertical),
+            horizontal: widget.paddingHorizontal,
+            vertical: widget.paddingVertical),
         child: ListTile(
           onTap: () {
-            if (onTap != null) {
-              onTap!();
+            if (widget.onTap != null) {
+              widget.onTap!();
             }
           },
           contentPadding:
@@ -211,32 +218,46 @@ class ReservationCardItem extends StatelessWidget {
           trailing: SizedBox(
             width: 100,
             // height: 50,
-            child: (restaurantReserveFacade.status == "accepted" &&
-                    restaurantReserveFacade.date.isBefore(DateTime(
-                      dateNow.year,
-                      dateNow.month,
-                      dateNow.day + 1,
-                    )))
-                ? IconButton(
-                    onPressed: () {}, icon: const Icon(Icons.add_comment))
+            child: (widget.restaurantReserveFacade.status == "accepted")
+                ? widget.restaurantReserveFacade.status == "accepted" &&
+                        widget.restaurantReserveFacade.date.isBefore(
+                          DateTime.now(),
+                        )
+                    ? Center(
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.report,
+                            color: Color.fromARGB(255, 228, 228, 37),
+                          ),
+                        ),
+                      )
+                    : const Text('')
                 : Row(
                     children: [
                       IconButton(
-                        padding: EdgeInsets.all(1),
-                        onPressed: () {},
+                        onPressed: () {
+                          widget.restaurantReserveFacade
+                              .updateStatus(status: "accepted");
+                          setState(() {});
+                        },
                         icon: const Icon(
                           Icons.done,
                           color: Colors.greenAccent,
                         ),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          widget.restaurantReserveFacade
+                              .updateStatus(status: "rejected");
+                          setState(() {});
+                        },
                         icon: const Icon(Icons.close, color: Colors.redAccent),
                       ),
                     ],
                   ),
           ),
-          leading: restaurantReserveFacade.status == "waiting"
+          leading: widget.restaurantReserveFacade.status == "waiting"
               ? const CircleAvatar(
                   backgroundColor: Color.fromARGB(255, 255, 255, 254),
                   child: Icon(
@@ -245,7 +266,7 @@ class ReservationCardItem extends StatelessWidget {
                     color: Color.fromARGB(255, 230, 192, 28),
                   ),
                 )
-              : restaurantReserveFacade.status == "rejected"
+              : widget.restaurantReserveFacade.status == "rejected"
                   ? const CircleAvatar(
                       backgroundColor: Color.fromARGB(255, 255, 255, 255),
                       child: Icon(
@@ -263,14 +284,14 @@ class ReservationCardItem extends StatelessWidget {
                       ),
                     ),
           title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(restaurantReserveFacade.numOfPeople.toString()),
+              Text(widget.restaurantReserveFacade.numOfPeople.toString()),
+              AddHorizontalSpace(10),
               Row(
                 children: [
                   const Icon(Icons.person),
                   Text(
-                    "${restaurantReserveFacade.numOfPeople}",
+                    "${widget.restaurantReserveFacade.numOfPeople}",
                     style: const TextStyle(
                       color: Color.fromARGB(255, 32, 33, 34),
                       fontSize: 20,
@@ -280,9 +301,9 @@ class ReservationCardItem extends StatelessWidget {
               )
             ],
           ),
-          subtitle: Text(restaurantReserveFacade.dateAsString +
+          subtitle: Text(widget.restaurantReserveFacade.dateAsString +
               " " +
-              restaurantReserveFacade.hour.toString()),
+              widget.restaurantReserveFacade.hour.toString()),
         ),
       ),
     );
