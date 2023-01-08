@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import '../../widgets/loadingSpin.dart';
@@ -213,20 +215,14 @@ class _ReservationCardItemState extends State<ReservationCardItem> {
             width: 100,
             // height: 50,
             child: (widget.userReserveFacade.reserve.status == "accepted")
-                ? widget.userReserveFacade.reserve.status == "accepted" &&
+                ? (widget.userReserveFacade.reserve.status == "accepted" &&
                         widget.userReserveFacade.reserve.date.isBefore(
                           DateTime.now().add(const Duration(hours: 1)),
-                        )
+                        ))
                     ? Center(
                         child: IconButton(
                           onPressed: () {
-                            return showHttpDialog(
-                              "Phone Number",
-                              widget.userReserveFacade.user.phoneNumber
-                                  .toString(),
-                              "Close",
-                              context,
-                            );
+                            log("message");
                           },
                           icon: const Icon(
                             Icons.report,
@@ -234,7 +230,18 @@ class _ReservationCardItemState extends State<ReservationCardItem> {
                           ),
                         ),
                       )
-                    : IconButton(onPressed: () {}, icon: const Icon(Icons.call))
+                    : IconButton(
+                        onPressed: () {
+                          return showHttpDialog(
+                            "Phone Number",
+                            widget.userReserveFacade.user.phoneNumber
+                                .toString(),
+                            "Close",
+                            context,
+                          );
+                        },
+                        icon: const Icon(Icons.call),
+                      )
                 : Row(
                     children: [
                       IconButton(
