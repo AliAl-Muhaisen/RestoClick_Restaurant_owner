@@ -118,4 +118,17 @@ class Apikey with ChangeNotifier {
 
     return url.toString();
   }
+
+  Future<String> getCategory({
+    String? category,
+  }) async {
+    final token = await LocalStorage().token;
+    final userId = await LocalStorage().userId;
+
+    String url = getAPIbyKey('DataBase').toString() +
+        "restaurantCategory/${userId.toString()}${category?.isNotEmpty ?? false ? "/$category" : ''}.json?auth=" +
+        token.toString();
+
+    return url.toString();
+  }
 }

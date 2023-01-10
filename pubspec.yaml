@@ -49,6 +49,7 @@ dependencies:
   multiselect: ^0.0.4
   floating_navbar: ^2.0.2
   flutter_spinkit: ^5.1.0
+  group_button: ^5.2.2
 
 
   # scrollable_reorderable_navbar: ^0.0.2

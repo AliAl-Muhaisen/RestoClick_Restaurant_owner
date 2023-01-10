@@ -38,9 +38,6 @@ class UserReserveFacade {
         Reservation? reserve =
             await Reservation.getReservedById(reserveKeys[i]);
         if (reserve != null) {
-          // if( reserve.date< DateTime.now()){
-
-          // }
           api = await Apikey().getUserReservation(userId: reserve.userId!);
           url = Uri.parse(api.toString());
           response = await http.get(url);
@@ -52,7 +49,6 @@ class UserReserveFacade {
           reservesWithUser.add(result);
         }
       }
-
       return reservesWithUser;
     } catch (e) {
       //! Connection error or NULL response

@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import '../../models/category.dart';
 
+import '../../widgets/eventBox.dart';
 import '../../widgets/loadingSpin.dart';
 import '../../widgets/utils/addSpace.dart';
 import '../../widgets/utils/showDialog.dart';
@@ -9,11 +11,16 @@ import '../../models/userReserveFacade.dart';
 
 class MyReservationPage extends StatelessWidget {
   static String routeName = "/myReservationPage";
-
-  const MyReservationPage({Key? key}) : super(key: key);
+  List<String> _selectedCategory = [];
+  MyReservationPage({Key? key}) : super(key: key);
   Future<List<UserReserveFacade>> get reserveWithRestaurant async {
     List<UserReserveFacade> result = await UserReserveFacade.reserveWithUser;
+    await selectedCategories;
     return result;
+  }
+
+  Future<void> get selectedCategories async {
+    _selectedCategory = await Category().selectedCategory;
   }
 
   @override
@@ -31,7 +38,15 @@ class MyReservationPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                AddVerticalSpace(20),
+                EventBox(
+                  items: _selectedCategory,
+                  selectedItem: const [
+                    "Family",
+                  ],
+                  saveNewItem: [],
+                  onSave: (List<String> values) => Category().addItems(values),
+                ),
+                AddVerticalSpace(20), 
                 FutureBuilder(
                   future: reserveWithRestaurant,
                   builder: (context, snapshot) {
