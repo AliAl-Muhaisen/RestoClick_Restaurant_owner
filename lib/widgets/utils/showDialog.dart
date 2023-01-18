@@ -4,12 +4,13 @@ import '../../translations/locale_keys.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import '../../models/feedback.dart' as feedbackReport;
 import '../../models/provider/auth.dart';
 import '../../models/http/http_exception.dart';
 import '../../models/screen.dart';
 import '../../models/verify.dart';
 import '../inputFormField.dart';
+import 'addSpace.dart';
 
 void showHttpDialog(
   String title,
@@ -262,5 +263,100 @@ void showDialogResetPassword(BuildContext context) {
         ),
       ),
     ),
+  );
+}
+
+void showAddSuggestionDialog({
+  required BuildContext context,
+  required String id,
+  required String userId,
+}) {
+  final GlobalKey<FormState> _formKeyShowDialog = GlobalKey<FormState>();
+  // String suggestion = '';
+  SnackBar? snackBar;
+  bool _isLoading = false;
+  InputFormField report = InputFormField(
+    label: "Report",
+    inputIcon: Icons.sms_outlined,
+    keyBoardType: TextInputType.text,
+    hintText: "",
+    validator: (String value) => Verify().isReport(value),
+    onSaved: (String value) => value,
+    enabledBorderRadius: 5,
+    focusedBorderRadius: 10,
+    isEnable: !_isLoading,
+  );
+  snackBar = SnackBar(
+    content: const Text("your report added successfully"),
+    action: SnackBarAction(
+      label: "Hide",
+      onPressed: () {
+        // Some code to undo the change.
+      },
+    ),
+  );
+  Future<void> _submit(StateSetter setState) async {
+    if (!_formKeyShowDialog.currentState!.validate()) {
+      log('invalid inputs');
+      // Invalid!
+      return;
+    }
+    _formKeyShowDialog.currentState!.save();
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      await feedbackReport.Feedback.reportUser(
+        id: id,
+        reportText: report.inputController!.text,
+        userId: userId,
+      );
+    } catch (e) {
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+      // Screen().pop(context);
+      Navigator.of(context, rootNavigator: true).pop();
+      ScaffoldMessenger.of(context).showSnackBar(snackBar!);
+    }
+  }
+
+  showDialog(
+    context: context,
+    builder: (context) =>
+        StatefulBuilder(builder: (context, StateSetter setState) {
+      return AlertDialog(
+        title: const Text('Add Report'),
+        elevation: 5,
+        scrollable: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        content: Form(
+          key: _formKeyShowDialog,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              report,
+              if (_isLoading)
+                Center(
+                  child: Column(
+                    children: [
+                      AddVerticalSpace(10),
+                      const CircularProgressIndicator(),
+                    ],
+                  ),
+                )
+              else
+                ElevatedButton(
+                  onPressed: () => _submit(setState),
+                  child: Text(LocaleKeys.settingPage_submit.tr()),
+                ),
+            ],
+          ),
+        ),
+      );
+    }),
   );
 }

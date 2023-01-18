@@ -145,7 +145,6 @@ class _ConfirmInfoPageState extends State<ConfirmInfoPage> {
       await Provider.of<Auth>(context, listen: false).getUserInfo();
 
       log('All done <*_->');
-      
     } catch (error) {
       log('something went wrong ConfirmInfoPage file , submit function \nError:');
       log(error.toString());
@@ -164,7 +163,9 @@ class _ConfirmInfoPageState extends State<ConfirmInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(title: const Text("Confirm Info")),
+      appBar: AppBar(
+        title: const Text("Confirm Info"),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Form(

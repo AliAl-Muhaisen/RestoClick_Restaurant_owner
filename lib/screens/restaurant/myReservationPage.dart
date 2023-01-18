@@ -9,18 +9,25 @@ import '../../widgets/utils/addSpace.dart';
 import '../../widgets/utils/showDialog.dart';
 import '../../models/userReserveFacade.dart';
 
-class MyReservationPage extends StatelessWidget {
+class MyReservationPage extends StatefulWidget {
   static String routeName = "/myReservationPage";
-  List<String> _selectedCategory = [];
+
   MyReservationPage({Key? key}) : super(key: key);
+
+  @override
+  State<MyReservationPage> createState() => _MyReservationPageState();
+}
+
+class _MyReservationPageState extends State<MyReservationPage> {
   Future<List<UserReserveFacade>> get reserveWithRestaurant async {
     List<UserReserveFacade> result = await UserReserveFacade.reserveWithUser;
-    await selectedCategories;
+
     return result;
   }
 
-  Future<void> get selectedCategories async {
-    _selectedCategory = await Category().selectedCategory;
+  Future<List<String>> get selectedCategories async {
+    List<String> selectedCategory = await Category().selectedCategory;
+    return selectedCategory;
   }
 
   @override
@@ -36,17 +43,33 @@ class MyReservationPage extends StatelessWidget {
         child: Center(
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                EventBox(
-                  items: _selectedCategory,
-                  selectedItem: const [
-                    "Family",
-                  ],
-                  saveNewItem: [],
-                  onSave: (List<String> values) => Category().addItems(values),
-                ),
-                AddVerticalSpace(20), 
+                FutureBuilder(
+                    future: selectedCategories,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Text('');
+                      } else if (snapshot.connectionState ==
+                          ConnectionState.done) {
+                        List<String> result = [];
+                        if (snapshot.hasData) {
+                          result = snapshot.data as List<String>;
+                        }
+                        return Column(
+                          children: [
+                            EventBox(
+                              selectedItem: [...result],
+                              buttonsData: Category().category,
+                              onSave: (List<String> values) =>
+                                  Category().addItems(values),
+                            ),
+                            AddVerticalSpace(20),
+                          ],
+                        );
+                      }
+                      return const Text('');
+                    }),
                 FutureBuilder(
                   future: reserveWithRestaurant,
                   builder: (context, snapshot) {
@@ -79,7 +102,8 @@ class MyReservationPage extends StatelessWidget {
                             itemBuilder: (context, index) {
                               return SingleChildScrollView(
                                 child: ReservationItem(
-                                    userReserveFacade: result[index]),
+                                  userReserveFacade: result[index],
+                                ),
                               );
                             }),
                       );
@@ -90,7 +114,7 @@ class MyReservationPage extends StatelessWidget {
                     );
                   },
                 ),
-                AddVerticalSpace(10)
+                AddVerticalSpace(50)
               ]),
         ),
       ),
@@ -150,7 +174,7 @@ class ReservationItem extends StatelessWidget {
         );
       },
       onDismissed: (direction) {
-        userReserveFacade.reserve.delete();
+        userReserveFacade.reserve!.delete();
       },
       child: ReservationCardItem(
         userReserveFacade: userReserveFacade,
@@ -229,9 +253,9 @@ class _ReservationCardItemState extends State<ReservationCardItem> {
           trailing: SizedBox(
             width: 100,
             // height: 50,
-            child: (widget.userReserveFacade.reserve.status == "accepted")
-                ? (widget.userReserveFacade.reserve.status == "accepted" &&
-                        widget.userReserveFacade.reserve.date.isBefore(
+            child: (widget.userReserveFacade.reserve!.status == "accepted")
+                ? (widget.userReserveFacade.reserve!.status == "accepted" &&
+                        widget.userReserveFacade.reserve!.date.isBefore(
                           DateTime.now().add(const Duration(hours: 1)),
                         ))
                     ? Center(
@@ -257,31 +281,34 @@ class _ReservationCardItemState extends State<ReservationCardItem> {
                         },
                         icon: const Icon(Icons.call),
                       )
-                : Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          widget.userReserveFacade.reserve
-                              .updateStatus(status: "accepted");
-                          setState(() {});
-                        },
-                        icon: const Icon(
-                          Icons.done,
-                          color: Colors.greenAccent,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          widget.userReserveFacade.reserve
-                              .updateStatus(status: "rejected");
-                          setState(() {});
-                        },
-                        icon: const Icon(Icons.close, color: Colors.redAccent),
-                      ),
-                    ],
-                  ),
+                : widget.userReserveFacade.reserve!.status != "rejected"
+                    ? Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              widget.userReserveFacade.reserve!
+                                  .updateStatus(status: "accepted");
+                              setState(() {});
+                            },
+                            icon: const Icon(
+                              Icons.done,
+                              color: Colors.greenAccent,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              widget.userReserveFacade.reserve!
+                                  .updateStatus(status: "rejected");
+                              setState(() {});
+                            },
+                            icon: const Icon(Icons.close,
+                                color: Colors.redAccent),
+                          ),
+                        ],
+                      )
+                    : const Text(''),
           ),
-          leading: widget.userReserveFacade.reserve.status == "waiting"
+          leading: widget.userReserveFacade.reserve!.status == "waiting"
               ? const CircleAvatar(
                   backgroundColor: Color.fromARGB(255, 255, 255, 254),
                   child: Icon(
@@ -290,7 +317,7 @@ class _ReservationCardItemState extends State<ReservationCardItem> {
                     color: Color.fromARGB(255, 230, 192, 28),
                   ),
                 )
-              : widget.userReserveFacade.reserve.status == "rejected"
+              : widget.userReserveFacade.reserve!.status == "rejected"
                   ? const CircleAvatar(
                       backgroundColor: Color.fromARGB(255, 255, 255, 255),
                       child: Icon(
@@ -311,23 +338,30 @@ class _ReservationCardItemState extends State<ReservationCardItem> {
             children: [
               Text(widget.userReserveFacade.user.name.toString()),
               AddHorizontalSpace(10),
+            ],
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(widget.userReserveFacade.reserve!.dateAsString +
+                  " " +
+                  widget.userReserveFacade.reserve!.hour.toString()),
+              AddVerticalSpace(8),
               Row(
                 children: [
-                  const Icon(Icons.person),
+                  const Icon(Icons.person,
+                      size: 20, color: Color.fromARGB(255, 35, 36, 35)),
                   Text(
-                    "${widget.userReserveFacade.reserve.numOfPeople}",
+                    "${widget.userReserveFacade.reserve!.numOfPeople}",
                     style: const TextStyle(
                       color: Color.fromARGB(255, 32, 33, 34),
-                      fontSize: 20,
+                      fontSize: 16,
                     ),
                   ),
                 ],
               )
             ],
           ),
-          subtitle: Text(widget.userReserveFacade.reserve.dateAsString +
-              " " +
-              widget.userReserveFacade.reserve.hour.toString()),
         ),
       ),
     );

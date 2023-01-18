@@ -51,11 +51,12 @@ class _LoginPageState extends State<LoginPage> {
     );
     super.initState();
   }
-  
+
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
   }
+
   Future<void> _submit() async {
     log('submitted form');
     if (!_formKey.currentState!.validate()) {
@@ -70,12 +71,12 @@ class _LoginPageState extends State<LoginPage> {
     });
     try {
       await Provider.of<Auth>(context, listen: false)
-          .login(user.email, user.password,context);
+          .login(user.email, user.password, context);
       Screen().pop(context);
 
       // showHttpDialog('Account created successfully', context);
     } on HttpException catch (error) {
-      var errorMessage = 'Authentication failed';
+      var errorMessage = 'Invalid Email or Password';
       if (error.toString().contains('EMAIL_EXISTS')) {
         errorMessage = 'This email address is already in use.';
       } else if (error.toString().contains('INVALID_EMAIL')) {
@@ -106,7 +107,9 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     // print(verify.isPassword('asld'));
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text("Login"),
+      ),
       body: Center(
         child: Form(
           key: _formKey,
@@ -118,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
               const ForgotPasswordButton(),
               AddVerticalSpace(15),
               if (_isLoading)
-                 spinKitLoading()
+                spinKitLoading()
               else
                 SizedBox(
                   width: MediaQuery.of(context).size.width - 30,

@@ -82,7 +82,7 @@ class Verify {
     if (!RegExp(
             r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
         .hasMatch(email)) {
-      return LocaleKeys.inputForm_userName_errorMessage_invalid.tr();
+      return LocaleKeys.inputForm_email_errorMessage_invalid.tr();
     }
     return null;
   }
@@ -127,6 +127,14 @@ class Verify {
   String? isUserName(String? name) {
     if (!RegExp(r"^[a-zA-Z\d._-]{3,20}").hasMatch(name!)) {
       return LocaleKeys.inputForm_userName_errorMessage_invalid.tr();
+    }
+    return null;
+  }
+
+  String? isReport(String report) {
+    String value = report.trim();
+    if (value.length < 20 || value.length > 110) {
+      return "Please enter a Suggestion between 20-110 letter";
     }
     return null;
   }

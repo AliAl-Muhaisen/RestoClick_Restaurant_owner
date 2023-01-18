@@ -5,6 +5,7 @@ import 'package:floating_navbar/floating_navbar_item.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_owner_app/screens/auth/confirmInfo.dart';
 import 'package:restaurant_owner_app/screens/homePage.dart';
+import 'package:restaurant_owner_app/screens/restaurant/feedbackPage.dart';
 import 'package:restaurant_owner_app/themes/stander/colors.dart';
 import '../../models/localStorage.dart';
 import '../../screens/restaurant/menuPage.dart';
@@ -77,6 +78,11 @@ class _FloatingNavbarState extends State<FloatingNavbar> {
                 iconData: Icons.archive_outlined,
                 page: MyReservationPage(),
                 title: 'Booking'),
+            FloatingNavBarItem(
+              iconData: Icons.forum,
+              page: FeedbackPage(),
+              title: 'Feedback',
+            ),
             FloatingNavBarItem(
                 iconData: Icons.settings,
                 page: ElevatedButton(

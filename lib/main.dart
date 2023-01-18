@@ -6,7 +6,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'models/provider/restaurant/restaurantMenu.dart';
 
-
 import 'models/provider/auth.dart';
 import 'models/provider/restaurant/meal.dart';
 import 'models/screen.dart';
@@ -45,7 +44,7 @@ Future<void> main() async {
         Locale('ar'),
       ],
       fallbackLocale: const Locale('en'),
-      assetLoader:const CodegenLoader(),
+      assetLoader: const CodegenLoader(),
       child: MyApp(),
     ),
   );
@@ -70,7 +69,14 @@ class MyApp extends StatelessWidget {
           title: 'Flutter Demo',
           theme: ThemeData(
             primarySwatch: Colors.blue,
-            scaffoldBackgroundColor:backgroundColor,//Color.fromARGB(255, 243, 235, 235),
+            scaffoldBackgroundColor:
+                backgroundColor, //Color.fromARGB(255, 243, 235, 235),
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Colors.white,
+              elevation: 2,
+              foregroundColor: Colors.black,
+              centerTitle: true,
+            ),
           ),
 
           localizationsDelegates: context.localizationDelegates,
@@ -79,7 +85,7 @@ class MyApp extends StatelessWidget {
           routes: Screen().routes,
           // home: MyHomePage(),
           home: auth.isAuth
-              ?const FloatingNavbar()
+              ? const FloatingNavbar()
               : FutureBuilder(
                   future: auth.tryAutoLogin(),
                   builder: (
@@ -89,7 +95,7 @@ class MyApp extends StatelessWidget {
                       authResultSnapShot.connectionState ==
                               ConnectionState.waiting
                           ? SplashPage()
-                          :const MyHomePage(),
+                          : const MyHomePage(),
                 ),
         ),
       ),

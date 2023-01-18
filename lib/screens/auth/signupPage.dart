@@ -129,7 +129,9 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text("Login"),
+      ),
       body: Center(
         child: SingleChildScrollView(
           child: Form(

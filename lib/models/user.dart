@@ -74,8 +74,8 @@ class User {
   }
 
   /// To get user imageProfile
-  String get imageProfile {
-    return _imageProfile!;
+  String? get imageProfile {
+    return _imageProfile;
   }
 
   /// To get user phoneNumber

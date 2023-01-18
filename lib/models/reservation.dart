@@ -3,8 +3,6 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import './http/API/apiKey.dart';
 
-
-
 class Reservation {
   String? _id;
 
@@ -69,14 +67,15 @@ class Reservation {
       String api = await Apikey().reservation(reservedId: reservedId);
       Uri url = Uri.parse(api.toString());
       http.Response response = await http.get(url);
-      reserveData = await json.decode(response.body) as Map<String, dynamic>;
+    
+      reserveData = await json.decode(response.body) as Map<String, dynamic> ;
 
       Reservation reserve = Reservation.fromJson(reserveData, reservedId);
 
       return reserve;
     } catch (e) {
-      log("something went wrong models-> reserve file-> get getReservedById");
-      log(e.toString());
+      // log("something went wrong models-> reserve file-> get getReservedById");
+      // log(e.toString());
       return null;
     }
   }
@@ -118,7 +117,7 @@ class Reservation {
       Uri url = Uri.parse(api.toString());
       await http.delete(url);
 
-      api = await Apikey().getUserReservation(reservedId: id!, userId: userId!);
+      api = await Apikey().getUser(reservedId: id!, userId: userId!);
       url = Uri.parse(api.toString());
       await http.delete(url);
 

@@ -23,6 +23,7 @@ class Restaurant {
   *$ = categories 
   */
   /// Class Variables
+
   String? _restaurantName;
   File? _workLicense;
   File? _commercialRegistry;
@@ -42,6 +43,8 @@ class Restaurant {
     _type = resInfo['type'];
     _id = restaurantId;
   }
+
+  static List<Restaurant> _restaurants = [];
 
   /// To get restaurant address
   String? get address => _address;
@@ -138,8 +141,14 @@ class Restaurant {
     }
   }
 
-  /// To get restaurants from database
   static Future<List<Restaurant>> getRestaurants() async {
+    if (_restaurants.isNotEmpty) return _restaurants;
+    _restaurants = await _getRestaurants();
+    return _restaurants;
+  }
+
+  /// To get restaurants from database
+  static Future<List<Restaurant>> _getRestaurants() async {
     List<Restaurant> restaurants = [];
     final userId = await LocalStorage().userId;
 

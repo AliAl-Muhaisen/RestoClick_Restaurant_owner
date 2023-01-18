@@ -98,9 +98,13 @@ class LocalStorage {
   }
 
   Future<String?> _getAuthData(String valueName) async {
-    final extractedUserData = await authData;
-    final value = await extractedUserData![valueName];
-    return value.toString();
+    try {
+      final extractedUserData = await authData;
+      final value = await extractedUserData![valueName];
+      return value.toString();
+    } catch (e) {
+      return null;
+    }
   }
 
   /// get userInfo from local storage

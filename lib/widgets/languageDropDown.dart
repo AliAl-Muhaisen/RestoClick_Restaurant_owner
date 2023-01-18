@@ -16,7 +16,7 @@ Widget LanguageDropButton(BuildContext context) {
 
         icon: const Icon(
           Icons.language,
-          color: Color.fromARGB(255, 238, 231, 231),
+          color: Color.fromARGB(255, 49, 47, 47),
         ),
 
         items: Language.languageList

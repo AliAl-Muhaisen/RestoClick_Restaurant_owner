@@ -43,4 +43,5 @@ class Category {
   List<String> get mealCategories {
     return [..._mealCategories];
   }
+  
 }

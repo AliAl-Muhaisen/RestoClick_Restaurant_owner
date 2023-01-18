@@ -121,7 +121,7 @@ class Auth with ChangeNotifier {
     } else if (!info.containsKey('restaurantInfo')) {
       log('Complete restaurant information');
     } else {
-      log('All done ${info.containsKey('restaurantInfo')} $info');
+      log('All done');
       _isCompleteInfo = true;
     }
     notifyListeners();
@@ -151,13 +151,18 @@ class Auth with ChangeNotifier {
     log('trying to login ');
 
     //? Attempt to auto-login
-
-    final expiryDate = DateTime.parse(await LocalStorage().expiryDate);
-    if (expiryDate.isBefore(DateTime.now())) {
-      // ! Auto login failed
-      log('Auto login failed');
+    DateTime expiryDate;
+    try {
+      expiryDate = DateTime.parse(await LocalStorage().expiryDate);
+      if (expiryDate.isBefore(DateTime.now())) {
+        // ! Auto login failed
+        log('Auto login failed');
+        return false;
+      }
+    } catch (e) {
       return false;
     }
+
     _token = await LocalStorage().token;
     _userId = await LocalStorage().userId;
     _expiryDate = expiryDate;

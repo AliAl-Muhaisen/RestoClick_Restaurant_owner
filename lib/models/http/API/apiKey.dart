@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '/models/localStorage.dart';
@@ -62,6 +64,7 @@ class Apikey with ChangeNotifier {
     String url = getAPIbyKey('DataBase').toString() +
         "restaurantUsers.json?auth=" +
         token.toString();
+    // log(url.toString());
     return url.toString();
   }
 
@@ -107,7 +110,7 @@ class Apikey with ChangeNotifier {
     return url.toString();
   }
 
-  Future<String> getUserReservation({
+  Future<String> getUser({
     String? reservedId,
     required String userId,
   }) async {
@@ -127,6 +130,40 @@ class Apikey with ChangeNotifier {
 
     String url = getAPIbyKey('DataBase').toString() +
         "restaurantCategory/${userId.toString()}${category?.isNotEmpty ?? false ? "/$category" : ''}.json?auth=" +
+        token.toString();
+
+    return url.toString();
+  }
+
+  Future<String> getFeedbackUser({bool? isReport = false}) async {
+    final token = await LocalStorage().token;
+    final userId = await LocalStorage().userId;
+
+    String url = getAPIbyKey('DataBase').toString() +
+        "users/${userId.toString()}/${isReport! ? 'report' : 'feedback'}.json?auth=" +
+        token.toString();
+
+    return url.toString();
+  }
+
+  Future<String> getFeedback({String? feedbackId}) async {
+    final token = await LocalStorage().token;
+
+    String url = getAPIbyKey('DataBase').toString() +
+        "feedback${feedbackId?.isEmpty ?? true ? '' : '/$feedbackId'}.json?auth=" +
+        token.toString();
+
+    return url.toString();
+  }
+
+  Future<String> getFeedbackRestaurant({
+    bool? isReport = false,
+  }) async {
+    final token = await LocalStorage().token;
+    final userId = await LocalStorage().userId;
+
+    String url = getAPIbyKey('DataBase').toString() +
+        "restaurantUsers/$userId/${isReport! ? 'report' : 'feedback'}.json?auth=" +
         token.toString();
 
     return url.toString();

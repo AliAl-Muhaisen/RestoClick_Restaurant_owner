@@ -6,16 +6,13 @@ import 'package:restaurant_owner_app/widgets/utils/addSpace.dart';
 
 class EventBox extends StatefulWidget {
   final List<String> selectedItem;
-  final List<String> saveNewItem;
-  final List<String> items;
   final void Function(List<String>) onSave;
-
+  final List<String> buttonsData;
   EventBox({
     Key? key,
     required this.selectedItem,
-    required this.saveNewItem,
     required this.onSave,
-    required this.items,
+    required this.buttonsData,
   }) : super(key: key);
 
   @override
@@ -23,12 +20,10 @@ class EventBox extends StatefulWidget {
 }
 
 class _EventBoxState extends State<EventBox> {
-  List<String> _selectedItem = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _selectedItem = widget.selectedItem.toList();
   }
 
   // @override
@@ -75,34 +70,38 @@ class _EventBoxState extends State<EventBox> {
             ),
             isRadio: false,
             enableDeselect: true,
-            onSelected: (value, index, isSelected, {onSelected}) {
-              if (_selectedItem.contains(value.toString())) {
-                isSelected = false;
+            onSelected: (
+              value,
+              index,
+              isSelected,
+            ) {
+              if (widget.selectedItem.contains(value.toString())) {
+                log('if $value $isSelected $index');
 
-                _selectedItem.remove(value.toString());
-
-                setState(() {});
+                setState(() {
+                  widget.selectedItem.remove(value.toString());
+                  isSelected = false;
+                });
               } else {
-                _selectedItem.add(value.toString());
+                setState(() {
+                  widget.selectedItem.add(value.toString());
+                });
               }
+              log(widget.selectedItem.toString());
             },
             buttonBuilder: (selected, data, context) {
-              if (_selectedItem.contains(data.toString())) {
+              if (widget.selectedItem.contains(data.toString())) {
+                // log('if $data $selected');
                 selected = true;
               }
+              // log('else  if $data $selected');
+
               return CategoryCard(
                 data: data.toString(),
                 isSelected: selected,
               );
             },
-            buttons: const [
-              "Family",
-              "Friends",
-              "Couples",
-              "Birth Day",
-              "19:00",
-              "21:40"
-            ],
+            buttons: widget.buttonsData,
           ),
           AddVerticalSpace(10),
           SizedBox(
@@ -110,7 +109,7 @@ class _EventBoxState extends State<EventBox> {
             child: OutlinedButton.icon(
               onPressed: () {
                 try {
-                  widget.onSave(_selectedItem);
+                  widget.onSave(widget.selectedItem);
                 } catch (e) {}
               },
               icon: const Icon(Icons.save),
@@ -129,11 +128,11 @@ class _EventBoxState extends State<EventBox> {
   }
 }
 
-class CategoryCard extends StatelessWidget {
+class CategoryCard extends StatefulWidget {
   final String data;
-  final bool isSelected;
+  bool isSelected;
   // final bool? isPreviousSelected;
-  const CategoryCard({
+  CategoryCard({
     Key? key,
     required this.data,
     required this.isSelected,
@@ -141,11 +140,18 @@ class CategoryCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<CategoryCard> createState() => _CategoryCardState();
+}
+
+class _CategoryCardState extends State<CategoryCard> {
+  @override
   Widget build(BuildContext context) {
+    log("${widget.isSelected}");
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: isSelected ? Colors.blue[300] : Colors.amber,
+        color: widget.isSelected ? Colors.blue[300] : Colors.amber,
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.3),
@@ -162,11 +168,11 @@ class CategoryCard extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Center(
             child: Text(
-              data.toString(),
+              widget.data.toString(),
               style: TextStyle(
                 fontSize: 15,
                 // fontWeight: FontWeight.w40,
-                color: isSelected ? Colors.white : Colors.black,
+                color: widget.isSelected ? Colors.white : Colors.black,
               ),
             ),
           ),

@@ -38,7 +38,7 @@ class Category {
     try {
       String api = await Apikey().getCategory();
       Uri url = Uri.parse(api.toString());
-      var body = json.encode({newCategory: true});
+      var body = json.encode({newCategory.toLowerCase(): true});
       await http.patch (url, body: body);
     } catch (e) {
       log("something went wrong models-> category file-> addItem");
