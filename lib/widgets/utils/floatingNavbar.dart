@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_owner_app/screens/auth/confirmInfo.dart';
 import 'package:restaurant_owner_app/screens/homePage.dart';
 import 'package:restaurant_owner_app/screens/restaurant/feedbackPage.dart';
+import 'package:restaurant_owner_app/screens/setting.dart';
 import 'package:restaurant_owner_app/themes/stander/colors.dart';
 import '../../models/localStorage.dart';
 import '../../screens/restaurant/menuPage.dart';
@@ -20,29 +21,7 @@ class FloatingNavbar extends StatefulWidget {
 }
 
 class _FloatingNavbarState extends State<FloatingNavbar> {
-  // Widget build(BuildContext context) => Container(
-  //       margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-  //       child: Container(
-  //         height: 60,
-  //         decoration: BoxDecoration(
-  //           boxShadow: [
-  //             BoxShadow(color: Colors.grey),
-  //           ],
-  //           color: Theme.of(context).primaryColor,
-  //           borderRadius: BorderRadius.circular(10),
-  //         ),
-  //         child: Row(
-  //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //           children: [
-  //             Icon(Icons.home_rounded),
-  //             Icon(Icons.search),
-  //             Icon(Icons.camera_alt),
-  //             Icon(Icons.notifications),
-  //             Icon(Icons.person)
-  //           ],
-  //         ),
-  //       ),
-  //     );
+
   Future<bool?> get isCompleteInfo async {
     return await LocalStorage().isCompleteInfo;
   }
@@ -85,8 +64,7 @@ class _FloatingNavbarState extends State<FloatingNavbar> {
             ),
             FloatingNavBarItem(
                 iconData: Icons.settings,
-                page: ElevatedButton(
-                    child: const Text("Settings"), onPressed: () {}),
+                page: SettingPage(),
                 title: 'Settings'),
           ],
           horizontalPadding: 10.0,

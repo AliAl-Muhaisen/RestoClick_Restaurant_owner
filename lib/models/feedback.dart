@@ -87,16 +87,12 @@ class Feedback {
           await json.decode(response.body) as Map<String, dynamic>?;
       if (feedbackDataKeys?.isEmpty ?? true) return [];
       feedbackDataKeys!.forEach((key, value) => feedbackIds.add(key));
-      log('feed 90 $feedbackIds');
 
       for (var i = 0; i < feedbackIds.length; i++) {
-          log("IIIIIIIIIIDDDDDD ${i }");
 
         Feedback? feedback = await feedbackById(id: feedbackIds[i]);
-          log("IIIIIIIIIIDDDDDD 95 ${feedback!.text }");
 
         if (feedback != null) {
-          log("IIIIIIIIIIDDDDDD ${feedback.userId!}");
           String reportId = Feedback._generateReportId(
               reserveId: feedbackIds[i], userId: feedback.userId!);
 
@@ -107,10 +103,8 @@ class Feedback {
           result.add(feedback);
         }
       }
-      log('feed 102 $result');
       return result;
     } catch (e) {
-      log("restaurantFeedbacks $e");
       return [];
     }
   }
@@ -145,7 +139,6 @@ class Feedback {
       Feedback feedback = Feedback.fromJSON(data!, id);
       return feedback;
     } catch (e) {
-      log("feedbackById $e");
       return null;
     }
   }

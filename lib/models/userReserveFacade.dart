@@ -62,8 +62,7 @@ class UserReserveFacade {
       return reservesWithUser;
     } catch (e) {
       //! Connection error or NULL response
-      log("something went wrong models-> RestaurantReserveFacade file-> get reserveWithRestaurant");
-      log(e.toString());
+
       return [];
     }
   }
@@ -78,7 +77,6 @@ class UserReserveFacade {
       _reportWithUserList = await _getFeedbackWithUser(isReport: true) ?? [];
       return _reportWithUserList;
     } catch (e) {
-      log("reportWithUser $e");
       return [];
     }
   }
@@ -128,7 +126,6 @@ class UserReserveFacade {
       }
       return feedbackWithUser;
     } catch (e) {
-      log("_getFeedbackWithUser $e");
       return [];
     }
   }

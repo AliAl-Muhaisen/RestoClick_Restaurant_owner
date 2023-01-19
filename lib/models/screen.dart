@@ -1,3 +1,4 @@
+import '../screens/EditAccount.dart';
 import '../screens/auth/confirmInfo.dart';
 import '../screens/restaurant/competitorRestaurantDetail.dart';
 import '../screens/restaurant/menuPage.dart';
@@ -45,7 +46,8 @@ class Screen {
     FloatingNavbar.routeName: (context) => const FloatingNavbar(),
     CompetitorRestaurantDetail.routeName: (context) =>
         CompetitorRestaurantDetail(),
-    MyReservationPage.routeName: (context) => MyReservationPage()
+    MyReservationPage.routeName: (context) => MyReservationPage(),
+    EditAccount.routeName: (context) => EditAccount()
     // AccountSettingPage.routeName: (context) => AccountSettingPage(),
     // EditAccount.routeName: (context) => EditAccount()
   };

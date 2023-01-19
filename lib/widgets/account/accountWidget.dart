@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/localStorage.dart';
 import '../../themes/stander/colors.dart';
 import '../utils/addSpace.dart';
 
@@ -12,8 +13,27 @@ SizedBox ProfilePic({bool isEdit = false}) {
       clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
-        const CircleAvatar(
-          backgroundImage: AssetImage("assets/images/avatar.png"),
+        FutureBuilder(
+          future: LocalStorage().imageUrl,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircleAvatar(
+                  backgroundImage: AssetImage("assets/images/avatar.png"));
+            }
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasData) {
+                String imageUrl = snapshot.data as String;
+                return CircleAvatar(
+                    backgroundImage: NetworkImage(
+                        "https://firebasestorage.googleapis.com/v0/b/restoclick-85d53.appspot.com/o/restaurantRegistration%2F8A0ZqdEC5CQTGL0fY1V23OMnESf2%2FrestaurantProfileImage.jpg?alt=media&token=a33fa182-b554-40a8-852d-959d7f674cfa"));
+              }
+              return const CircleAvatar(
+                  backgroundImage: AssetImage("assets/images/avatar.png"));
+            }
+
+            return const CircleAvatar(
+                backgroundImage: AssetImage("assets/images/avatar.png"));
+          },
         ),
         if (isEdit)
           Positioned(
@@ -91,7 +111,7 @@ class CardSetting extends StatelessWidget {
 
 class CardMealMenu extends StatefulWidget {
   Function(bool) onPressed;
- 
+
   String text;
 
   CardMealMenu({
@@ -128,7 +148,6 @@ class _CardMealMenuState extends State<CardMealMenu> {
         },
         child: Row(
           children: [
-           
             AddHorizontalSpace(20),
             Expanded(
               child: Text(

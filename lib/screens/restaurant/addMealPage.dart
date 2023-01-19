@@ -152,7 +152,10 @@ class _MealPageState extends State<MealPage> {
                   ),
                   mealImageCard!,
                   if (meal.imageFile == null)
-                    const Text('no image selected')
+                    const Text(
+                      'no image selected',
+                      style: TextStyle(color: Colors.red),
+                    )
                   else
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15),
@@ -172,7 +175,7 @@ class _MealPageState extends State<MealPage> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: _submit,
-                        child: const Text("continue"),
+                        child: const Text("Add"),
                       ),
                     ),
                   AddVerticalSpace(100),

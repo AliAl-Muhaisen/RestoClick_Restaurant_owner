@@ -61,7 +61,8 @@ class Verify {
 
   /// To validate the Address
   String? isAddress(String? address) {
-    if (address!.length < 3 || address.isEmpty) {
+    address = address!.trim();
+    if (address.length < 3 || address.isEmpty || address.length > 30) {
       return "invalid address";
     }
     return null;
@@ -69,7 +70,8 @@ class Verify {
 
   /// To validate the Restaurant Name
   String? isRestaurantName(String? restaurantName) {
-    if (restaurantName!.length < 3 || restaurantName.isEmpty) {
+    restaurantName = restaurantName!.trim();
+    if (restaurantName.length < 3 || restaurantName.isEmpty) {
       return "invalid name";
     }
     return null;
@@ -89,7 +91,8 @@ class Verify {
 
   /// To validate the Password
   String? isPassword(String? password) {
-    if (password!.length < 8) {
+    password = password!.trim();
+    if (password.length < 8) {
       return LocaleKeys.inputForm_password_errorMessage_short.tr();
     }
     if (!RegExp(r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}").hasMatch(password)) {
@@ -103,10 +106,10 @@ class Verify {
 
   /// To validate the Phone Number
   String? isPhoneNumber(String? phoneNumber) {
-    List<String> validInputs = [
-      '+',
-      ...validInputsNumber,
-    ];
+    // List<String> validInputs = [
+    //   '+',
+    //   ...validInputsNumber,
+    // ];
     var digits = phoneNumber!.trim().split('');
     if (digits.length < 7 || digits.length > 25) {
       return LocaleKeys.inputForm_phoneNumber_errorMessage_invalid.tr();
@@ -134,7 +137,7 @@ class Verify {
   String? isReport(String report) {
     String value = report.trim();
     if (value.length < 20 || value.length > 110) {
-      return "Please enter a Suggestion between 20-110 letter";
+      return "Please enter a Suggestion between 20-110 letters";
     }
     return null;
   }

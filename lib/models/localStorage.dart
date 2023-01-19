@@ -68,8 +68,6 @@ class LocalStorage {
       },
     );
     await prefs.setString(VarName.userInfo.toShortString(), userInfo);
-
-    // log('authUserInfo saved with value : ${prefs.get(VarName.userInfo.toShortString()).toString()}');
   }
 
   /// remove Local Storage
@@ -77,7 +75,6 @@ class LocalStorage {
     log('local storage file remove');
 
     final prefs = await SharedPreferences.getInstance();
-    // prefs.remove(authUserData);
     prefs.clear();
   }
 
@@ -88,7 +85,6 @@ class LocalStorage {
         final extractedUserData = await json.decode(
                 prefs.getString(VarName.authData.toShortString()).toString())
             as Map;
-        // log(extractedUserData.toString());
         return extractedUserData;
       }
     } catch (error) {
@@ -112,7 +108,6 @@ class LocalStorage {
     final prefs = await SharedPreferences.getInstance();
     final extractedUserData = await json.decode(
         prefs.getString(VarName.userInfo.toShortString()).toString()) as Map;
-    // log(extractedUserData.toString());
     return extractedUserData;
   }
 
@@ -135,6 +130,14 @@ class LocalStorage {
 
     final phoneNumber = await _getUserInfo(VarName.phoneNumber.toShortString());
     return phoneNumber.toString();
+  }
+
+  /// get phoneNumber from local storage
+  Future<String> get imageUrl async {
+    //? get token from local storage
+
+    final imageUrl = await _getUserInfo(VarName.imageUrl.toShortString());
+    return imageUrl.toString();
   }
 
   /// get email from local storage
@@ -175,11 +178,7 @@ class LocalStorage {
   Future<String> get userId async {
     //? get userId from local storage
     log('get userId');
-    // final prefs = await SharedPreferences.getInstance();
-    // final extractedUserData =
-    //     await json.decode(prefs.getString(authUserData).toString()) as Map;
-    // final userId =
-    //     await extractedUserData[VarName.userId.toShortString()] as String?;
+
     final userId = await _getAuthData(VarName.userId.toShortString());
     return userId.toString();
   }
@@ -206,6 +205,7 @@ enum VarName {
   authData,
   userInfo,
   isCompleteInfo,
+  imageUrl,
 }
 
 extension ParseToString on VarName {

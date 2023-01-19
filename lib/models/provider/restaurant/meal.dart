@@ -22,10 +22,6 @@ class Meal with ChangeNotifier {
   *$ = isGlutenFree
   *$ = isVegetarian
   *$ = categories 
-  *$ = 
-  *$ + 
-  *$ + 
-  *$ + 
   */
   String? _id; //! just for build constructor only
   String? _imageUrl; //! just for build constructor only

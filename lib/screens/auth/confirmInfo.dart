@@ -125,9 +125,6 @@ class _ConfirmInfoPageState extends State<ConfirmInfoPage> {
   }
 
   Future<void> _submit() async {
-    setState(() {
-      _isLoading = true;
-    });
     log('submitted form');
     if (!_formKey.currentState!.validate() ||
         restaurant.commercialRegistry == null ||
@@ -141,6 +138,9 @@ class _ConfirmInfoPageState extends State<ConfirmInfoPage> {
     _formKey.currentState!.save();
 
     try {
+      setState(() {
+        _isLoading = true;
+      });
       await restaurant.updateRestaurantInfo();
       await Provider.of<Auth>(context, listen: false).getUserInfo();
 

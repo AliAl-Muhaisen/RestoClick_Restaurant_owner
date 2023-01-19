@@ -15,15 +15,15 @@
     "password": {
       "label": "Password",
       "errorMessage": {
-        "invalid": "the password should contain at least one number and one character",
-        "short": "The password should contain at least 8 characters"
+        "invalid": "Should contain at least one number and one character",
+        "short": "Password must be between 8-18 characters"
       }
     },
     "userName": {
-      "label": "User Name",
+      "label": "Restaurant owner name",
       "hintText": "Ali Al-Muhaisen",
       "errorMessage": {
-        "invalid": "Please enter a valid user name address"
+        "invalid": "Please enter a valid user name"
       }
     },
     "phoneNumber": {

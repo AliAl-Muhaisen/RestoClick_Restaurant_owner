@@ -33,7 +33,7 @@ class _SignUpPageState extends State<SignUpPage> {
   InputFormField? email;
   InputFormField? password;
   InputFormField? phoneNumber;
-  InputFormField? firstName;
+  InputFormField? restaurantOwnerName;
 
   @override
   void initState() {
@@ -51,7 +51,7 @@ class _SignUpPageState extends State<SignUpPage> {
       inputIcon: Icons.shield,
       keyBoardType: TextInputType.visiblePassword,
       hintText: null,
-      validator: (value) => Verify().isUserName(value),
+      validator: (value) => Verify().isPassword(value),
       onSaved: (String value) => user.setPassword(value),
       obscureText: true,
     );
@@ -64,7 +64,7 @@ class _SignUpPageState extends State<SignUpPage> {
       validator: (value) => Verify().isPhoneNumber(value),
       onSaved: (String value) => user.setPhoneNumber(value),
     );
-    firstName = InputFormField(
+    restaurantOwnerName = InputFormField(
       inputIcon: Icons.account_circle,
       keyBoardType: TextInputType.name,
       label: LocaleKeys.inputForm_userName_label.tr(),
@@ -108,7 +108,7 @@ class _SignUpPageState extends State<SignUpPage> {
       } else if (error.toString().contains('WEAK_PASSWORD')) {
         errorMessage = 'This password is too weak.';
       }
-      // showHttpDialog(errorMessage,context);
+      showHttpDialog("Error",errorMessage,"Okay",context);
     } catch (error) {
       log('signup error');
       log(error.toString());
@@ -131,7 +131,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Login"),
+        title: const Text("Sign up"),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -140,7 +140,7 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                firstName!,
+                restaurantOwnerName!,
                 email!,
                 phoneNumber!,
                 password!,
