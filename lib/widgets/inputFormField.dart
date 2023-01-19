@@ -13,6 +13,7 @@ class InputFormField extends StatefulWidget {
   String? initialValue;
   final String? Function(String) validator;
   final Function(String) onSaved;
+  final bool obscureText;
   // ignore: use_key_in_widget_constructors
 
   //?border
@@ -26,9 +27,10 @@ class InputFormField extends StatefulWidget {
     required this.validator,
     required this.onSaved,
     this.initialValue,
-    this.isEnable=true,
+    this.isEnable = true,
     this.focusedBorderRadius = 25.7,
     this.enabledBorderRadius = 25.7,
+    this.obscureText = false,
   });
 
   @override
@@ -57,15 +59,14 @@ class _InputFormFieldState extends State<InputFormField> {
 
   @override
   Widget build(BuildContext context) {
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: TextFormField(
+        obscureText: widget.obscureText,
         enabled: widget.isEnable,
         enableSuggestions: true,
         validator: (value) {
           String? verify = widget.validator(value!);
-          print('verify $verify');
 
           if (verify != null) {
             setState(() {
@@ -79,19 +80,11 @@ class _InputFormFieldState extends State<InputFormField> {
             return null;
           }
         },
-
         onSaved: (value) {
-          print('saved');
           widget.onSaved(value!);
         },
-
         controller: widget.inputController,
-        onChanged: (String? value) {
-          // widget.isValid = !widget.isValid;
-          // print('\n\n');
-          // print('widget.isValid ${widget.inputController.value.text}');
-          // print('\n\n');
-        },
+        onChanged: (String? value) {},
         decoration: InputDecoration(
           label: Text(widget.label),
           hintText: widget.hintText,
@@ -99,17 +92,15 @@ class _InputFormFieldState extends State<InputFormField> {
 
           fillColor: Colors.white,
           focusedBorder: UnderlineInputBorder(
-            borderSide:const BorderSide(color: Colors.white),
+            borderSide: const BorderSide(color: Colors.white),
             borderRadius: BorderRadius.circular(widget.focusedBorderRadius),
           ),
           enabledBorder: UnderlineInputBorder(
-            borderSide:const BorderSide(color: Colors.white),
+            borderSide: const BorderSide(color: Colors.white),
             borderRadius: BorderRadius.circular(widget.enabledBorderRadius),
           ),
 
-          // errorText:
-          //     isEmail ? 'Do not use the @ char.' : 'null',
-          border:const UnderlineInputBorder(), //OutlineInputBorder(),
+          border: const UnderlineInputBorder(), //OutlineInputBorder(),
           prefixIcon: Icon(
             widget.inputIcon,
             color: changeIconColor,

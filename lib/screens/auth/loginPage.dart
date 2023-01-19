@@ -48,6 +48,7 @@ class _LoginPageState extends State<LoginPage> {
       hintText: null,
       validator: (String value) => Verify().isUserName(value),
       onSaved: (String value) => user.setPassword(value),
+      obscureText: true,
     );
     super.initState();
   }

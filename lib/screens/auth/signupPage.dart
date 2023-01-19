@@ -53,6 +53,7 @@ class _SignUpPageState extends State<SignUpPage> {
       hintText: null,
       validator: (value) => Verify().isUserName(value),
       onSaved: (String value) => user.setPassword(value),
+      obscureText: true,
     );
 
     phoneNumber = InputFormField(

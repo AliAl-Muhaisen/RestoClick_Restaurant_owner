@@ -149,9 +149,14 @@ class Comment extends StatelessWidget {
   }
 }
 
-class Report extends StatelessWidget {
+class Report extends StatefulWidget {
   const Report({Key? key}) : super(key: key);
 
+  @override
+  State<Report> createState() => _ReportState();
+}
+
+class _ReportState extends State<Report> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -159,6 +164,9 @@ class Report extends StatelessWidget {
         child: RefreshIndicator(
           onRefresh: () async {
             await UserReserveFacade.reportWithUser(isRefresh: true);
+            return Future(() {
+              setState(() {});
+            });
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -173,6 +181,7 @@ class Report extends StatelessWidget {
                   if (snapshot.connectionState == ConnectionState.done) {
                     List<UserReserveFacade> result =
                         snapshot.data as List<UserReserveFacade>;
+                    log(result.toString());
                     if (!snapshot.hasData || result.isEmpty) {
                       return const Center(
                         child: Padding(
@@ -197,15 +206,10 @@ class Report extends StatelessWidget {
                           itemCount: result.length,
                           itemBuilder: (context, index) {
                             return SingleChildScrollView(
-                              child: InkWell(
-                                onTap: () {
-                                  log('message');
-                                },
-                                child: FeedbackCardItem(
-                                  imageUrl: result[index].user.imageProfile,
-                                  userName: result[index].user.name,
-                                  text: result[index].feedback!.text!,
-                                ),
+                              child: FeedbackCardItem(
+                                imageUrl: result[index].user.imageProfile,
+                                userName: result[index].user.name,
+                                text: result[index].feedback!.text!,
                               ),
                             );
                           }),

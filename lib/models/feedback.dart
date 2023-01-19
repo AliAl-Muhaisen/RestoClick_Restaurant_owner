@@ -31,7 +31,7 @@ class Feedback {
   Feedback.fromJSON(Map<String, dynamic> values, String id)
       : _id = id,
         _text = values['comment'] ?? '',
-        _rate = values['rate'].toDouble() ?? 0,
+        _rate = values['rate']?.toDouble() ?? 0,
         _userId = values['userId'];
 
   ///getters
@@ -51,7 +51,8 @@ class Feedback {
 
   Future<List<Feedback>?> get restaurantFeedbacks async {
     try {
-      List<Feedback> result = await _getRestaurantFeedbacks() ?? [];
+      List<Feedback> result =
+          await _getRestaurantFeedbacks(isReport: false) ?? [];
 
       return result;
     } catch (e) {
@@ -86,18 +87,27 @@ class Feedback {
           await json.decode(response.body) as Map<String, dynamic>?;
       if (feedbackDataKeys?.isEmpty ?? true) return [];
       feedbackDataKeys!.forEach((key, value) => feedbackIds.add(key));
+      log('feed 90 $feedbackIds');
 
       for (var i = 0; i < feedbackIds.length; i++) {
+          log("IIIIIIIIIIDDDDDD ${i }");
+
         Feedback? feedback = await feedbackById(id: feedbackIds[i]);
+          log("IIIIIIIIIIDDDDDD 95 ${feedback!.text }");
+
         if (feedback != null) {
-          if (reportsIds.isNotEmpty &&
-              reportsIds.contains('${feedback.userId}$feedbackIds[i]')) {
+          log("IIIIIIIIIIDDDDDD ${feedback.userId!}");
+          String reportId = Feedback._generateReportId(
+              reserveId: feedbackIds[i], userId: feedback.userId!);
+
+          if (reportsIds.isNotEmpty && reportsIds.contains(reportId)) {
             feedback.setIsUserReported(true);
           }
 
           result.add(feedback);
         }
       }
+      log('feed 102 $result');
       return result;
     } catch (e) {
       log("restaurantFeedbacks $e");
@@ -135,8 +145,16 @@ class Feedback {
       Feedback feedback = Feedback.fromJSON(data!, id);
       return feedback;
     } catch (e) {
+      log("feedbackById $e");
       return null;
     }
+  }
+
+  static String _generateReportId({
+    required String reserveId,
+    required String userId,
+  }) {
+    return '$reserveId$userId';
   }
 
   static Future<void> reportUser({
@@ -145,7 +163,10 @@ class Feedback {
     required String id,
   }) async {
     try {
-      String createReportId = "$id$userId";
+      String createReportId = _generateReportId(
+        reserveId: id,
+        userId: userId,
+      );
       String api = await Apikey().getFeedbackRestaurant(isReport: true);
       Uri uri = Uri.parse(api.toString());
       await http.patch(uri, body: json.encode({createReportId: userId}));
@@ -153,7 +174,7 @@ class Feedback {
       uri = Uri.parse(api.toString());
       await http.patch(uri,
           body: json.encode({
-            createReportId: {"text": reportText}
+            createReportId: {"comment": reportText}
           }));
     } catch (e) {}
   }
